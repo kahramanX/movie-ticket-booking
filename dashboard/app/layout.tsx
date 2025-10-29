@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { LanguageProvider } from "../contexts/LanguageContext";
 import "./globals.css";
 
-const interFont = Geist({
+const interFont = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });

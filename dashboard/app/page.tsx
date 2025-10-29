@@ -8,7 +8,7 @@ export default function Home() {
   const { t } = useLanguage();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 ">
       <div className="absolute top-4 right-4">
         <LanguageSwitcher />
       </div>

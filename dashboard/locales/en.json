@@ -1,0 +1,43 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "dashboard": "Dashboard"
+  },
+  "common": {
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Dashboard for the client"
+  },
+  "movies": {
+    "title": "Movies",
+    "addMovie": "Add Movie",
+    "editMovie": "Edit Movie",
+    "deleteMovie": "Delete Movie",
+    "movieName": "Movie Name",
+    "genre": "Genre",
+    "duration": "Duration",
+    "releaseDate": "Release Date",
+    "rating": "Rating"
+  },
+  "tickets": {
+    "title": "Tickets",
+    "bookTicket": "Book Ticket",
+    "ticketNumber": "Ticket Number",
+    "seatNumber": "Seat Number",
+    "showTime": "Show Time",
+    "price": "Price"
+  }
+}

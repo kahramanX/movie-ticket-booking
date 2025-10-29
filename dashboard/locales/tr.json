@@ -1,0 +1,43 @@
+{
+  "navigation": {
+    "home": "Ana Sayfa",
+    "about": "Hakkımızda",
+    "contact": "İletişim",
+    "dashboard": "Yönetim Paneli"
+  },
+  "common": {
+    "welcome": "Hoş Geldiniz",
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "add": "Ekle",
+    "search": "Ara",
+    "filter": "Filtrele"
+  },
+  "dashboard": {
+    "title": "Yönetim Paneli",
+    "description": "Müşteri için yönetim paneli"
+  },
+  "movies": {
+    "title": "Filmler",
+    "addMovie": "Film Ekle",
+    "editMovie": "Film Düzenle",
+    "deleteMovie": "Film Sil",
+    "movieName": "Film Adı",
+    "genre": "Tür",
+    "duration": "Süre",
+    "releaseDate": "Çıkış Tarihi",
+    "rating": "Puan"
+  },
+  "tickets": {
+    "title": "Biletler",
+    "bookTicket": "Bilet Rezerve Et",
+    "ticketNumber": "Bilet Numarası",
+    "seatNumber": "Koltuk Numarası",
+    "showTime": "Seans Saati",
+    "price": "Fiyat"
+  }
+}

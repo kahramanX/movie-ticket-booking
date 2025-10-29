@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { LanguageProvider } from "../contexts/LanguageContext";
+import DynamicHtml from "../components/DynamicHtml";
 import "./globals.css";
 
 const interFont = Inter({
@@ -19,10 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <LanguageProvider>
-      <html lang="tr">
-        <body className={`${interFont.variable} antialiased`}>{children}</body>
-      </html>
-    </LanguageProvider>
+    <html lang="tr">
+      <body className={`${interFont.variable} antialiased`}>
+        <LanguageProvider>
+          <DynamicHtml>{children}</DynamicHtml>
+        </LanguageProvider>
+      </body>
+    </html>
   );
 }

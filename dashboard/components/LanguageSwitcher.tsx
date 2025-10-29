@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage, Language } from "../contexts/LanguageContext";
+import { Button } from "@/components/ui/button";
 
 export default function LanguageSwitcher() {
   const { state, dispatch } = useLanguage();
@@ -15,19 +16,16 @@ export default function LanguageSwitcher() {
   ];
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1">
       {languages.map((lang) => (
-        <button
+        <Button
           key={lang.code}
           onClick={() => handleLanguageChange(lang.code)}
-          className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-            state.currentLanguage === lang.code
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-          }`}
+          variant={state.currentLanguage === lang.code ? "default" : "outline"}
+          size="sm"
         >
           {lang.name}
-        </button>
+        </Button>
       ))}
     </div>
   );

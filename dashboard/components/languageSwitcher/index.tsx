@@ -1,9 +1,9 @@
 "use client";
 
-import { useLanguage, Language } from "../contexts/LanguageContext";
+import { useLanguage, Language } from "@/contexts/languageContext";
 import { Button } from "@/components/ui/button";
 
-export default function LanguageSwitcher() {
+export const LanguageSwitcher = () => {
   const { state, dispatch } = useLanguage();
 
   const handleLanguageChange = (language: Language) => {
@@ -29,4 +29,6 @@ export default function LanguageSwitcher() {
       ))}
     </div>
   );
-}
+};
+
+export default LanguageSwitcher;

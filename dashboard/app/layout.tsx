@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { LanguageProvider } from "../contexts/LanguageContext";
-import DynamicHtml from "../components/DynamicHtml";
+import NextTopLoader from "nextjs-toploader";
+import { LanguageProvider } from "@/contexts/languageContext";
+import { ThemeProvider } from "@/contexts/themeContext";
 import "./globals.css";
 
 const interFont = Inter({
@@ -20,11 +21,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr">
+    <html lang="tr" className="dark">
       <body className={`${interFont.variable} antialiased`}>
-        <LanguageProvider>
-          <DynamicHtml>{children}</DynamicHtml>
-        </LanguageProvider>
+        <NextTopLoader
+          color="#00f0ff"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={5}
+          crawl={true}
+          showSpinner={true}
+          easing="ease"
+          speed={200}
+          shadow="0 0 20px #2563eb, 0 0 15px #3b82f6, 0 0 10px #60a5fa, 0 2px 4px rgba(37, 99, 235, 0.3)"
+        />
+        <ThemeProvider defaultTheme="dark">
+          <LanguageProvider>{children}</LanguageProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

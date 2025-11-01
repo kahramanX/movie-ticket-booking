@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useReducer, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  ReactNode,
+  useEffect,
+} from "react";
 import trTranslations from "../locales/tr.json";
 import enTranslations from "../locales/en.json";
 
@@ -26,6 +32,27 @@ interface LanguageContextType {
   t: (key: string) => string;
 }
 
+// Cookie helper fonksiyonları
+const getCookieLanguage = (): Language => {
+  if (typeof document !== "undefined") {
+    const cookies = document.cookie.split(";");
+    const langCookie = cookies.find((cookie) =>
+      cookie.trim().startsWith("language="),
+    );
+    if (langCookie) {
+      const lang = langCookie.split("=")[1] as Language;
+      return lang === "en" || lang === "tr" ? lang : "en";
+    }
+  }
+  return "en"; // Varsayılan İngilizce
+};
+
+const setCookieLanguage = (language: Language) => {
+  if (typeof document !== "undefined") {
+    document.cookie = `language=${language}; path=/; max-age=31536000`; // 1 yıl
+  }
+};
+
 // Çevirileri getir
 const getTranslations = (language: Language): Translations => {
   switch (language) {
@@ -34,7 +61,7 @@ const getTranslations = (language: Language): Translations => {
     case "en":
       return enTranslations;
     default:
-      return trTranslations;
+      return enTranslations; // Varsayılan İngilizce
   }
 };
 
@@ -45,6 +72,7 @@ const languageReducer = (
 ): LanguageState => {
   switch (action.type) {
     case "SET_LANGUAGE":
+      setCookieLanguage(action.payload); // Cookie'ye kaydet
       return {
         ...state,
         currentLanguage: action.payload,
@@ -55,10 +83,13 @@ const languageReducer = (
   }
 };
 
-// Initial state - default olarak Türkçe
-const initialState: LanguageState = {
-  currentLanguage: "tr",
-  translations: trTranslations,
+// Initial state - cookie'den oku, yoksa İngilizce
+const getInitialState = (): LanguageState => {
+  const savedLanguage = getCookieLanguage();
+  return {
+    currentLanguage: savedLanguage,
+    translations: getTranslations(savedLanguage),
+  };
 };
 
 // Context oluştur
@@ -70,18 +101,16 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [state, dispatch] = useReducer(languageReducer, initialState);
+  const [state, dispatch] = useReducer(languageReducer, getInitialState());
 
-  // Çeviri fonksiyonu - nested key'leri destekler (örn: "dashboard.title")
+  // İlk yüklemede cookie'yi set et
+  useEffect(() => {
+    setCookieLanguage(state.currentLanguage);
+  }, []);
+
+  // Çeviri fonksiyonu - flat structure için
   const t = (key: string): string => {
-    const keys = key.split(".");
-    let value: any = state.translations;
-
-    for (const k of keys) {
-      value = value?.[k];
-    }
-
-    return value || key; // Eğer çeviri bulunamazsa key'i döndür
+    return (state.translations as Record<string, string>)[key] || key; // Eğer çeviri bulunamazsa key'i döndür
   };
 
   return (

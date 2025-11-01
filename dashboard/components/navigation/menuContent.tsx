@@ -102,7 +102,9 @@ export const MenuContent = ({ onItemClick }: { onItemClick?: () => void }) => {
           icon={<Home className="h-5 w-5" />}
           className="font-medium text-lg justify-center bg-primary/10 hover:bg-primary/20 py-3"
           onClick={onItemClick}
-        ></MenuItem>
+        >
+          {""}
+        </MenuItem>
       </div>
 
       {/* Grid Layout - Mobile için 2 sütun */}

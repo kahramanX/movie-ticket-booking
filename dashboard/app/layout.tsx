@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="tr" className="dark">
       <body className={`${interFont.variable} antialiased`}>
         <NextTopLoader
-          color="#00ff00"
+          color="#00f0ff"
           initialPosition={0.08}
           crawlSpeed={200}
           height={5}

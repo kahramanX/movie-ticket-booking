@@ -81,5 +81,19 @@
   "User Management": "Kullanıcı Yönetimi",
   "System Settings": "Sistem Ayarları",
   "Reporting": "Raporlama",
-  "Menu": "Menü"
+  "Menu": "Menü",
+  "Page Not Found": "Sayfa Bulunamadı",
+  "The page you are looking for does not exist": "Aradığınız sayfa mevcut değil",
+  "Go to Dashboard": "Dashboard'a Git",
+  "Go Back": "Geri Dön",
+  "Internal Server Error": "Sunucu Hatası",
+  "Something went wrong on our end": "Bizim tarafımızda bir sorun oluştu",
+  "Try Again": "Tekrar Dene",
+  "Loading": "Yükleniyor...",
+  "Oops": "Oops!",
+  "Something went wrong": "Bir şeyler ters gitti",
+  "An unexpected error occurred": "Beklenmeyen bir hata oluştu. Lütfen sayfayı yenilemeyi deneyin.",
+  "Debug Info": "Debug Bilgisi",
+  "Try Again Button": "Tekrar Dene",
+  "Go to Homepage": "Ana Sayfaya Dön"
 }

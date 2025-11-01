@@ -17,38 +17,37 @@ export const menuConfig: MenuSection[] = [
   {
     title: "Movies",
     items: [
-      { label: "Movie List", href: "/panel/movies" },
-      { label: "Add Movie", href: "/panel/movies/add" },
-      { label: "Categories", href: "/panel/categories" },
-      { label: "Types", href: "/panel/types" },
+      { label: "Movie List", href: "/panel/movie-list" },
+      { label: "Movie Category List", href: "/panel/movie-category-list" },
     ],
   },
   {
     title: "Theaters",
     items: [
-      { label: "Theater List", href: "/panel/theaters" },
-      { label: "Add New Theater", href: "/panel/theaters/add" },
+      { label: "Theater List", href: "/panel/theater-list" },
       { label: "Theater Management", href: "/panel/theater-management" },
       { label: "Seat Layout", href: "/panel/seat-layout" },
     ],
   },
   {
     title: "Reservations",
-    items: [
-      { label: "Reservation List", href: "/panel/reservations" },
-      { label: "New Reservation", href: "/panel/reservations/add" },
-      { label: "Cancelled", href: "/panel/reservations/cancelled" },
-      { label: "Completed", href: "/panel/reservations/completed" },
-    ],
+    items: [{ label: "Reservation List", href: "/panel/reservation-list" }],
   },
   {
     title: "Users",
     items: [
-      { label: "Admin List", href: "/panel/admins" },
-      { label: "User List", href: "/panel/users" },
-      { label: "New Customer", href: "/panel/customers/add" },
+      { label: "Admin List", href: "/panel/admin-list" },
+      { label: "User List", href: "/panel/user-list" },
       { label: "VIP Customers", href: "/panel/customers/vip" },
       { label: "Membership Management", href: "/panel/membership" },
+    ],
+  },
+  {
+    title: "Blogs",
+    items: [
+      { label: "Blog List", href: "/panel/blog-list" },
+      { label: "Blog Category List", href: "/panel/blog-category-list" },
+      { label: "Blog Tag List", href: "/panel/blog-tag-list" },
     ],
   },
 ];

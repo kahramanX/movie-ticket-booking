@@ -81,5 +81,19 @@
   "User Management": "User Management",
   "System Settings": "System Settings",
   "Reporting": "Reporting",
-  "Menu": "Menu"
+  "Menu": "Menu",
+  "Page Not Found": "Page Not Found",
+  "The page you are looking for does not exist": "The page you are looking for does not exist",
+  "Go to Dashboard": "Go to Dashboard",
+  "Go Back": "Go Back",
+  "Internal Server Error": "Internal Server Error",
+  "Something went wrong on our end": "Something went wrong on our end",
+  "Try Again": "Try Again",
+  "Loading": "Loading...",
+  "Oops": "Oops!",
+  "Something went wrong": "Something went wrong",
+  "An unexpected error occurred": "An unexpected error occurred. Please try refreshing the page.",
+  "Debug Info": "Debug Info",
+  "Try Again Button": "Try Again",
+  "Go to Homepage": "Go to Homepage"
 }

@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useLanguage } from "@/contexts/languageContext";
 import {
   User,
   Mail,
@@ -13,21 +14,23 @@ import {
 } from "lucide-react";
 
 export const ProfilePage = () => {
+  const { t } = useLanguage();
+
   // Admin bilgileri (dummy data)
   const adminData = {
     name: "Timur Kahraman",
     email: "timur.kahraman@sinema.com",
     phone: "+90 532 123 45 67",
-    role: "Sistem Yöneticisi",
-    department: "Bilgi İşlem",
-    location: "İstanbul, Türkiye",
-    joinDate: "15 Ocak 2023",
+    role: t("System Administrator"),
+    department: t("Information Technology"),
+    location: t("Istanbul Turkey"),
+    joinDate: t("January 15 2023"),
     employeeId: "ADM-2023-001",
     permissions: [
-      "Tüm Yetkiler",
-      "Kullanıcı Yönetimi",
-      "Sistem Ayarları",
-      "Raporlama",
+      t("All Permissions"),
+      t("User Management"),
+      t("System Settings"),
+      t("Reporting"),
     ],
   };
 
@@ -36,9 +39,11 @@ export const ProfilePage = () => {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Profil Bilgileri</h1>
+          <h1 className="text-3xl font-bold mb-2">
+            {t("Profile Information")}
+          </h1>
           <p className="text-muted-foreground">
-            Hesap bilgilerinizi görüntüleyebilirsiniz
+            {t("You can view your account information")}
           </p>
         </div>
 
@@ -65,14 +70,14 @@ export const ProfilePage = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="w-5 h-5" />
-                Kişisel Bilgiler
+                {t("Personal Information")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">E-posta</p>
+                  <p className="text-sm text-muted-foreground">{t("Email")}</p>
                   <p className="font-medium">{adminData.email}</p>
                 </div>
               </div>
@@ -80,7 +85,7 @@ export const ProfilePage = () => {
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Telefon</p>
+                  <p className="text-sm text-muted-foreground">{t("Phone")}</p>
                   <p className="font-medium">{adminData.phone}</p>
                 </div>
               </div>
@@ -88,7 +93,9 @@ export const ProfilePage = () => {
               <div className="flex items-center gap-3">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Konum</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("Location")}
+                  </p>
                   <p className="font-medium">{adminData.location}</p>
                 </div>
               </div>
@@ -100,14 +107,16 @@ export const ProfilePage = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Building className="w-5 h-5" />
-                İş Bilgileri
+                {t("Work Information")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-3">
                 <Shield className="w-4 h-4 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Personel ID</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("Employee ID")}
+                  </p>
                   <p className="font-medium">{adminData.employeeId}</p>
                 </div>
               </div>
@@ -115,7 +124,9 @@ export const ProfilePage = () => {
               <div className="flex items-center gap-3">
                 <Calendar className="w-4 h-4 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">İşe Başlama</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("Start Date")}
+                  </p>
                   <p className="font-medium">{adminData.joinDate}</p>
                 </div>
               </div>
@@ -123,7 +134,9 @@ export const ProfilePage = () => {
               <div className="flex items-center gap-3">
                 <Building className="w-4 h-4 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Departman</p>
+                  <p className="text-sm text-muted-foreground">
+                    {t("Department")}
+                  </p>
                   <p className="font-medium">{adminData.department}</p>
                 </div>
               </div>
@@ -136,7 +149,7 @@ export const ProfilePage = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="w-5 h-5" />
-              Sistem Yetkileri
+              {t("System Permissions")}
             </CardTitle>
           </CardHeader>
           <CardContent>

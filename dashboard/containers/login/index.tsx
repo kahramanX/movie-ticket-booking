@@ -6,12 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLanguage } from "@/contexts/languageContext";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,12 +43,12 @@ export const LoginForm = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-center">Giriş Yap</CardTitle>
+        <CardTitle className="text-center">{t("Login")}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4 ">
           <div className="space-y-2">
-            <Label htmlFor="email">E-posta</Label>
+            <Label htmlFor="email">{t("Email")}</Label>
             <Input
               id="email"
               type="email"
@@ -58,7 +60,7 @@ export const LoginForm = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Şifre</Label>
+            <Label htmlFor="password">{t("Password")}</Label>
             <Input
               id="password"
               type="password"
@@ -70,7 +72,7 @@ export const LoginForm = () => {
           </div>
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Giriş yapılıyor..." : "Giriş Yap"}
+            {isLoading ? t("Logging in") : t("Login")}
           </Button>
         </form>
       </CardContent>

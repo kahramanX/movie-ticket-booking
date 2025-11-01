@@ -1,0 +1,129 @@
+# Cursor Rules - Dashboard Project (Admin Panel)
+
+## Proje Bilgisi
+
+- **Proje:** Admin Dashboard
+- **Framework:** Next.js 16 (App Router)
+- **UI Library:** React 19
+- **Styling:** Tailwind CSS + shadcn/ui (Radix UI)
+- **i18n:** next-intl
+- **Language:** TypeScript (strict mode)
+
+## Routing ve Sayfalar
+
+### ÖNEMLİ: Statik Routing Kullan
+
+- Dashboard sayfaları için **dinamik routing YOK** - her sayfa statik olmalı
+- Sayfa komponentleri `app/panel/` altında statik route'lar olarak oluşturulmalı
+- `[...slug]` gibi dinamik route'lar **KULLANMA**
+- Yeni sayfa eklerken:
+  1. `app/panel/[sayfa-adi]/page.tsx` oluştur
+  2. `config/pageComponents.ts` içine ekle
+  3. `config/menuConfig.ts` içine menü item'ı ekle
+
+### Sayfa Yapısı
+
+```
+app/panel/
+  ├── movie-list/page.tsx
+  ├── movie-category-list/page.tsx
+  ├── theater-list/page.tsx
+  └── ...
+```
+
+## Komponent Yapısı
+
+### Organizasyon
+
+- **UI komponentleri:** `components/ui/` - shadcn/ui pattern'i kullan
+- **Container komponentleri:** `containers/` - sayfa seviyesi logic
+- **Context'ler:** `contexts/` - global state yönetimi
+- **Sayfa komponentleri:** `containers/pages/` - her sayfa için ayrı container
+
+### Komponent Standartları
+
+- Tüm komponentler TypeScript ile yazılmalı
+- Client component'ler için `"use client"` directive **MUTLAKA** ekle
+- Server component'ler için directive ekleme
+- Named export kullan (default export tercih etme)
+
+## Stil ve UI
+
+### Tailwind CSS
+
+- Tailwind CSS kullan (inline styles **KESINLIKLE YOK**)
+- `cn()` utility fonksiyonu ile class birleştirme yap
+- CSS Variables kullan (dark mode desteği için)
+- Responsive design: mobile-first yaklaşım
+
+### UI Kütüphaneleri
+
+- **shadcn/ui** komponentleri kullan (Radix UI tabanlı)
+- **Lucide React** icon library kullan
+- Mevcut UI komponentlerini extend et, yeni yazma
+
+## State Management
+
+- **Context API** kullan:
+  - `themeContext` - tema yönetimi
+  - `tabContext` - tab yönetimi
+  - `languageContext` - dil yönetimi
+- Global state için Context tercih et
+- Local state için `useState` yeterli
+
+## Internationalization (i18n)
+
+- **next-intl** kullan
+- Çeviriler `locales/tr.json` ve `locales/en.json` dosyalarında
+- Hard-coded string'ler **KESINLIKLE YOK** - her zaman i18n kullan
+- Dil değiştirme `components/languageSwitcher/` üzerinden
+
+## API ve Data Fetching
+
+- Server component'lerde direkt `fetch` kullan
+- Client component'lerde `useEffect` + `fetch` pattern
+- API route'lar `lib/api/` altında organize et
+- Error handling **MUTLAKA** ekle
+- Loading state'leri **MUTLAKA** ekle
+
+## Dosya Organizasyonu
+
+### Path Aliases
+
+- `@/` path alias kullan (tsconfig.json'da tanımlı)
+- Örnek: `import { Button } from "@/components/ui/button"`
+
+### Dosya İsimlendirme
+
+- Komponentler: PascalCase (`UserProfile.tsx`)
+- Dosyalar: kebab-case (`user-profile.tsx`)
+- Utility fonksiyonlar: camelCase (`formatDate.ts`)
+
+## YAPILMAYACAKLAR ❌
+
+- ❌ Dinamik routing (`[...slug]`) oluşturma
+- ❌ `console.log` production kodunda bırakma
+- ❌ Hard-coded string'ler kullanma (i18n zorunlu)
+- ❌ Inline style'lar kullanma (Tailwind kullan)
+- ❌ `any` type kullanma (TypeScript strict mode)
+- ❌ Default export komponentlerde kullanma
+- ❌ Server component'lerde `"use client"` kullanma
+- ❌ Client component'lerde `"use client"` unutma
+
+## YAPILACAKLAR ✅
+
+- ✅ Her yeni sayfa için statik route oluştur
+- ✅ Komponentleri type-safe yap
+- ✅ Error handling ekle
+- ✅ Loading state'leri ekle
+- ✅ Responsive design düşün (mobile-first)
+- ✅ i18n kullan (tüm string'ler için)
+- ✅ Client/Server component ayrımına dikkat et
+
+## Kod Değişiklikleri
+
+- Mevcut kod stilini koru
+- Değişiklik yapmadan önce ilgili dosyaları oku
+- Breaking change'lerden kaçın
+- Backward compatibility'yi koru
+- Test etmeden commit yapma

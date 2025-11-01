@@ -1,5 +1,8 @@
 import { Header } from "@/containers/layout/header";
 import { Footer } from "@/containers/layout/footer";
+import { TabProvider } from "@/contexts/tabContext";
+import { TabBar } from "@/components/ui/tabBar";
+import { TabContent } from "@/components/ui/tabContent";
 
 export default function PanelLayout({
   children,
@@ -7,13 +10,20 @@ export default function PanelLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Header />
+    <TabProvider>
+      <div className="min-h-screen bg-background flex flex-col">
+        <Header />
 
-      {/* Main Content */}
-      <main className="flex-1">{children}</main>
+        {/* Tab Bar - Header'ın hemen altında */}
+        <TabBar />
 
-      <Footer />
-    </div>
+        {/* Main Content - Tab Content veya Children */}
+        <main className="flex-1 flex flex-col">
+          <TabContent />
+        </main>
+
+        <Footer />
+      </div>
+    </TabProvider>
   );
 }

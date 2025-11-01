@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/contexts/languageContext";
+import { useTab } from "@/contexts/tabContext";
 import { menuConfig } from "@/config/menuConfig";
+import { pageComponents } from "@/config/pageComponents";
 import { Home } from "lucide-react";
 
 interface MenuItemProps {
@@ -19,8 +21,11 @@ interface MenuSectionProps {
     label: string;
     href?: string;
     onClick?: () => void;
+    openInTab?: boolean;
+    tabTitle?: string;
   }>;
   onItemClick?: () => void;
+  onMenuClick?: (item: any, originalItem: any) => void;
 }
 
 export const MenuItem = ({
@@ -58,6 +63,7 @@ export const MenuSection = ({
   title,
   items,
   onItemClick,
+  onMenuClick,
 }: MenuSectionProps) => {
   return (
     <div className="space-y-1">
@@ -67,10 +73,14 @@ export const MenuSection = ({
       {items.map((item, index) => (
         <MenuItem
           key={index}
-          href={item.href}
+          href={item.openInTab ? undefined : item.href}
           onClick={() => {
-            item.onClick?.();
-            onItemClick?.();
+            if (item.openInTab && onMenuClick) {
+              onMenuClick(item, item);
+            } else {
+              item.onClick?.();
+              onItemClick?.();
+            }
           }}
         >
           {item.label}
@@ -82,6 +92,30 @@ export const MenuSection = ({
 
 export const MenuContent = ({ onItemClick }: { onItemClick?: () => void }) => {
   const { t } = useLanguage();
+  const { addTab, clearAllTabs } = useTab();
+
+  // Menu item click handler
+  const handleMenuClick = (item: any, originalItem: any) => {
+    if (originalItem.openInTab && item.href) {
+      // URL'den slug'ı çıkar
+      const slug = item.href.replace("/panel/", "");
+      const pageConfig = pageComponents[slug];
+
+      if (pageConfig) {
+        addTab({
+          title: originalItem.tabTitle || pageConfig.title,
+          path: item.href,
+          content: pageConfig.component,
+          closable: true,
+        });
+      }
+    } else if (item.onClick) {
+      item.onClick();
+    }
+
+    // Drawer'ı kapat
+    onItemClick?.();
+  };
 
   // Config'den menü verilerini al ve çevir
   const menuSections = menuConfig.map((section) => ({
@@ -90,6 +124,8 @@ export const MenuContent = ({ onItemClick }: { onItemClick?: () => void }) => {
       label: t(item.label),
       href: item.href,
       onClick: item.onClick,
+      openInTab: item.openInTab,
+      tabTitle: item.tabTitle,
     })),
   }));
 
@@ -101,7 +137,10 @@ export const MenuContent = ({ onItemClick }: { onItemClick?: () => void }) => {
           href="/panel"
           icon={<Home className="h-5 w-5" />}
           className="font-medium text-lg justify-center bg-primary/10 hover:bg-primary/20 py-3"
-          onClick={onItemClick}
+          onClick={() => {
+            clearAllTabs(); // Tüm tabları kapat
+            onItemClick?.(); // Drawer'ı kapat
+          }}
         >
           {""}
         </MenuItem>
@@ -109,14 +148,26 @@ export const MenuContent = ({ onItemClick }: { onItemClick?: () => void }) => {
 
       {/* Grid Layout - Mobile için 2 sütun */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {menuSections.slice(1).map((section, index) => (
-          <MenuSection
-            key={index}
-            title={section.title}
-            items={section.items}
-            onItemClick={onItemClick}
-          />
-        ))}
+        {menuSections.slice(1).map((section, sectionIndex) => {
+          const originalSection = menuConfig[sectionIndex + 1];
+
+          return (
+            <MenuSection
+              key={sectionIndex}
+              title={section.title}
+              items={section.items}
+              onItemClick={onItemClick}
+              onMenuClick={(item, originalItem) => {
+                // Original item'ı config'den al
+                const itemIndex = section.items.findIndex(
+                  (sectionItem) => sectionItem.label === item.label,
+                );
+                const configItem = originalSection.items[itemIndex];
+                handleMenuClick(item, configItem);
+              }}
+            />
+          );
+        })}
       </div>
     </div>
   );

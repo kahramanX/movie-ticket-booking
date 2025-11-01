@@ -1,0 +1,48 @@
+# Cursor Rules - Movie Ticket Booking Monorepo
+
+## Monorepo Yapısı
+
+Bu proje bir **monorepo** yapısındadır ve 3 ayrı proje içerir:
+
+- `dashboard/` - Admin Dashboard (Next.js)
+- `client/` - Müşteri Uygulaması (Frontend)
+- `server/` - Backend API (Server)
+
+## Genel Monorepo Kuralları
+
+### Proje Yapısı
+
+- Her proje kendi klasörü altında bağımsız bir uygulamadır
+- Her projenin kendi `package.json`, `tsconfig.json` ve kuralları vardır
+- Proje-spesifik kurallar için ilgili klasördeki `.cursorrules` dosyasına bak
+
+### Çalışma Prensibi
+
+- Hangi klasörde çalışıyorsan, o klasördeki `.cursorrules` dosyası aktif olur
+- Üst klasörlerdeki kurallar da geçerlidir (inherit edilir)
+- Proje-spesifik kurallar genel kuralları override eder
+
+### Kod Standartları (Tüm Projeler)
+
+- TypeScript kullan (strict mode)
+- ESLint kurallarına uy
+- Functional programming tercih et
+- Her zaman Türkçe cevap ver (kod yorumları İngilizce olabilir)
+
+### Dosya İsimlendirme
+
+- Komponentler: PascalCase (örn: `UserProfile.tsx`)
+- Dosyalar: kebab-case (örn: `user-profile.tsx`)
+- Utility fonksiyonlar: camelCase
+
+### Git ve Versiyon Kontrolü
+
+- Her proje için ayrı commit mesajları
+- Breaking change'lerden önce dikkatli ol
+- Test edilmeden commit yapma
+
+### NOT
+
+- Dashboard özel kuralları için: `dashboard/.cursorrules`
+- Client özel kuralları için: `client/.cursorrules`
+- Server özel kuralları için: `server/.cursorrules`

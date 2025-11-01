@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Menubar,
   MenubarContent,
@@ -21,12 +22,34 @@ import {
 import { Button } from "@/components/ui/button";
 import { MenuContent } from "./menuContent";
 import { useLanguage } from "@/contexts/languageContext";
+import { useTab } from "@/contexts/tabContext";
 import { menuConfig } from "@/config/menuConfig";
+import { pageComponents } from "@/config/pageComponents";
 import { Home, Menu } from "lucide-react";
 
 export const MainMenubar = () => {
   const { t } = useLanguage();
+  const { addTab, clearAllTabs } = useTab();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const router = useRouter();
+
+  // Menu item click handler
+  const handleMenuClick = (item: any, originalItem: any) => {
+    if (originalItem.openInTab && item.href) {
+      // URL'den slug'ı çıkar
+      const slug = item.href.replace('/panel/', '');
+      const pageConfig = pageComponents[slug];
+      
+      if (pageConfig) {
+        addTab({
+          title: originalItem.tabTitle || pageConfig.title,
+          path: item.href,
+          content: pageConfig.component,
+          closable: true
+        });
+      }
+    }
+  };
 
   // Config'den menü verilerini al ve çevir
   const menuSections = menuConfig.map((section) => ({
@@ -35,6 +58,8 @@ export const MainMenubar = () => {
       label: t(item.label),
       href: item.href,
       onClick: item.onClick,
+      openInTab: item.openInTab,
+      tabTitle: item.tabTitle,
     })),
   }));
 
@@ -44,12 +69,16 @@ export const MainMenubar = () => {
       <div className="hidden md:block">
         <Menubar>
           <MenubarMenu>
-            <Link className="cursor-pointer" href="/panel">
-              <MenubarTrigger className="flex items-center gap-2">
-                <Home className="h-4 w-4" />
-                {menuSections[0].title}
-              </MenubarTrigger>
-            </Link>
+            <MenubarTrigger 
+              className="flex items-center gap-2 cursor-pointer"
+              onClick={() => {
+                clearAllTabs(); // Tüm tabları kapat
+                router.push('/panel'); // Dashboard'a git
+              }}
+            >
+              <Home className="h-4 w-4" />
+              {menuSections[0].title}
+            </MenubarTrigger>
           </MenubarMenu>
 
           {/* Diğer menü bölümleri */}
@@ -57,15 +86,26 @@ export const MainMenubar = () => {
             <MenubarMenu key={sectionIndex}>
               <MenubarTrigger>{section.title}</MenubarTrigger>
               <MenubarContent>
-                {section.items.map((item, itemIndex) => (
-                  <MenubarItem key={itemIndex} asChild>
-                    {item.href ? (
-                      <Link href={item.href}>{item.label}</Link>
-                    ) : (
-                      <div onClick={item.onClick}>{item.label}</div>
-                    )}
-                  </MenubarItem>
-                ))}
+                {section.items.map((item, itemIndex) => {
+                  const originalItem = menuConfig[sectionIndex + 1].items[itemIndex];
+                  
+                  return (
+                    <MenubarItem key={itemIndex}>
+                      {item.openInTab ? (
+                        <div 
+                          className="cursor-pointer w-full"
+                          onClick={() => handleMenuClick(item, originalItem)}
+                        >
+                          {item.label}
+                        </div>
+                      ) : item.href ? (
+                        <Link href={item.href}>{item.label}</Link>
+                      ) : (
+                        <div onClick={item.onClick}>{item.label}</div>
+                      )}
+                    </MenubarItem>
+                  );
+                })}
               </MenubarContent>
             </MenubarMenu>
           ))}

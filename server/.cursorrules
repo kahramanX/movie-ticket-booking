@@ -1,6 +1,120 @@
 # Cursor Rules - Server Project (Backend API)
 
+    You are an expert in Fullstack TypeScript development with deep knowledge of Express.js, PostgreSQL, Sequelize ORM, and Node.js.
+    You understand how to architect scalable backend services that can power multiple frontend applications (React Native, Next.js).
+    You excel at building RESTful APIs with proper authentication, authorization, and data validation.
+    You have strong experience with relational databases, ORM patterns, and caching strategies.
+
+    Technologies:
+    - Backend: Express.js, Node.js, TypeScript
+    - Database: PostgreSQL, Sequelize ORM
+    - Cache/Session Store: Redis
+    - APIs: RESTful APIs, Webhook integrations
+    - Frontend Integration: Next.js, React, React Native
+
+    Express.js Patterns:
+    - Structure routes with clear separation of concerns (routes → controllers → services)
+    - Implement proper middleware chain (security → parsing → routing → error handling)
+    - Use controller layer for request handling, service layer for business logic
+    - Create reusable middleware for authentication, validation, and error handling
+    - Implement custom error classes for better error handling
+    - Use environment variables for all configuration
+    - Organize code by feature or domain (movies, users, etc.)
+
+    File Structure:
+    - Routes: src/routes/{feature}.ts
+    - Controllers: src/controllers/{feature}.ts
+    - Services: src/services/{feature}.ts
+    - Models: src/models/{feature}.ts
+    - Middleware: src/middleware/{type}.ts
+    - Validators: src/validators/{feature}.ts
+    - Utilities: src/utils/{function}.ts
+    - Types: src/types/{feature}.ts
+    - Config: src/config/{type}.ts
+
+    PostgreSQL & Sequelize Patterns:
+    - Design schemas with proper indexing for performance
+    - Use Sequelize migrations for all database schema changes
+    - Implement proper relationships (hasMany, belongsTo, hasOne, belongsToMany)
+    - Use transactions for operations that require atomicity
+    - Implement pagination for large datasets
+    - Use eager loading to avoid N+1 query problems
+    - Follow data validation patterns at both application (Zod/Yup) and database levels (Sequelize validations)
+    - Use proper foreign key constraints and unique constraints
+
+    TypeScript Code Style:
+    - Use TypeScript for all code; prefer types over interfaces except for public APIs
+    - Create precise types that reflect your data models
+    - Avoid using 'any' or 'unknown' types; look for type definitions in the codebase
+    - Avoid type assertions with 'as' or '!' operators unless absolutely necessary
+    - Use mapped and conditional types for advanced type transformations
+    - Export types from a central location for reuse
+    - Extend Express Request/Response types for custom properties
+
+    Code Structure:
+    - Write concise, technical TypeScript code
+    - Use functional and declarative programming patterns; avoid classes
+    - Prefer iteration and modularization over code duplication
+    - Use descriptive variable names with auxiliary verbs (e.g., isLoaded, hasError)
+    - Structure files: exports, helpers, types, constants
+    - Use constants for magic numbers and repeated values
+
+    Naming Conventions:
+    - Prefer named exports for utilities and functions
+    - Use PascalCase for types, interfaces, classes, and models
+    - Use camelCase for variables, functions, and methods
+    - Use kebab-case for file names (e.g., user-controller.ts)
+    - Use meaningful names that describe the purpose of functions and variables
+
+    Syntax Preferences:
+    - Use the 'function' keyword for pure functions
+    - Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements
+    - Use destructuring for cleaner code
+    - Prefer async/await over raw Promises for better readability
+    - Use optional chaining and nullish coalescing when appropriate
+
+    Security Best Practices:
+    - Implement proper authentication and authorization
+    - Sanitize user inputs to prevent injection attacks
+    - Use environment variables for sensitive configuration
+    - Implement rate limiting to prevent abuse
+    - Follow the principle of least privilege for API access
+    - Use HTTPS for all communications
+    - Validate and sanitize all inputs, especially from external sources
+    - Hash passwords with bcrypt (salt rounds: 10-12)
+    - Use JWT tokens for authentication (access + refresh token pattern)
+
+    Performance Optimization:
+    - Optimize database queries with proper indexing
+    - Implement caching strategies with Redis for frequently accessed data
+    - Use pagination for large datasets
+    - Use connection pooling for database connections
+    - Implement response compression (gzip)
+    - Monitor and optimize API response times
+    - Use eager loading instead of lazy loading to avoid N+1 problems
+
+    Testing Approach:
+    - Write unit tests for business logic (Jest)
+    - Implement integration tests for API endpoints (Supertest)
+    - Use mocking for external dependencies
+    - Write end-to-end tests for critical user flows
+    - Follow test-driven development when appropriate
+    - Maintain test coverage above 80%
+
+    AI Reasoning:
+    - Ask clarifying questions when multiple implementation paths are available and the best choice isn't obvious
+    - Present trade-offs between different approaches with their pros and cons
+    - Confirm understanding of requirements before implementing complex features
+    - Suggest alternatives when a requested approach might lead to performance or security issues
+    - Request context about existing patterns in the codebase when implementing new features
+    - Prioritize consistency with existing codebase patterns
+    - Consider scalability implications for database schema design
+    - Balance between performance optimization and code maintainability
+    - Evaluate security implications of implementation choices
+    - Follow Express.js and Sequelize best practices when designing APIs and data models
+
 ## Proje Bilgisi
+
 - **Proje:** Backend API Server
 - **Framework:** Express.js
 - **Runtime:** Node.js
@@ -14,47 +128,53 @@
 ### Express.js Framework Kuralları
 
 #### Application Setup
+
 - Express app'i TypeScript ile yaz
 - `express()` instance'ını `app.ts` veya `index.ts` dosyasında oluştur
 - Middleware'leri doğru sırayla ekle (güvenlik → parsing → routing → error handling)
 - Port'u environment variable'dan al (`process.env.PORT || 3000`)
 
 #### Middleware Sıralaması
+
 ```typescript
 // ✅ Doğru sıralama
-app.use(helmet());                    // Security headers
-app.use(cors());                      // CORS
-app.use(express.json());             // Body parser
-app.use(express.urlencoded());       // URL encoded parser
-app.use(cookieParser());              // Cookie parser
-app.use(expressSession());           // Session
-app.use('/api/v1', routes);          // Routes
-app.use(errorHandler);               // Error handler (en sonda)
+app.use(helmet()); // Security headers
+app.use(cors()); // CORS
+app.use(express.json()); // Body parser
+app.use(express.urlencoded()); // URL encoded parser
+app.use(cookieParser()); // Cookie parser
+app.use(expressSession()); // Session
+app.use("/api/v1", routes); // Routes
+app.use(errorHandler); // Error handler (en sonda)
 ```
 
 #### Route Yapısı
+
 - Her resource için ayrı router dosyası oluştur
 - Router'ları `routes/` klasöründe tut
 - Router'ları `express.Router()` ile oluştur
 - Route handler'ları controller'lara taşı (route dosyalarında direkt logic olmasın)
 
 #### Route Handler Pattern
+
 ```typescript
 // ✅ İYİ - Controller kullan
-router.get('/movies', movieController.getAllMovies);
-router.get('/movies/:id', movieController.getMovieById);
-router.post('/movies', validateMovie, movieController.createMovie);
+router.get("/movies", movieController.getAllMovies);
+router.get("/movies/:id", movieController.getMovieById);
+router.post("/movies", validateMovie, movieController.createMovie);
 
 // ❌ KÖTÜ - Route içinde logic
-router.get('/movies', async (req, res) => {
+router.get("/movies", async (req, res) => {
   const movies = await Movie.findAll();
   res.json(movies);
 });
 ```
 
 #### Request/Response Typing
+
 - Express Request ve Response type'larını extend et
 - Custom types kullan:
+
 ```typescript
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -66,11 +186,13 @@ interface AuthenticatedRequest extends Request {
 ```
 
 #### Async Error Handling
+
 - Async route handler'larda **MUTLAKA** error handling yap
 - Error middleware kullan (express-async-errors veya try-catch)
 - Custom error class'ları oluştur
 
 #### Error Middleware Pattern
+
 ```typescript
 // ✅ İYİ - Error middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -78,16 +200,17 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({
     success: false,
     error: {
-      code: 'INTERNAL_ERROR',
-      message: process.env.NODE_ENV === 'production' 
-        ? 'Internal server error' 
-        : err.message
-    }
+      code: "INTERNAL_ERROR",
+      message:
+        process.env.NODE_ENV === "production"
+          ? "Internal server error"
+          : err.message,
+    },
   });
 });
 
 // Route handler'da
-router.get('/movies', async (req, res, next) => {
+router.get("/movies", async (req, res, next) => {
   try {
     const movies = await Movie.findAll();
     res.json({ success: true, data: movies });
@@ -98,22 +221,26 @@ router.get('/movies', async (req, res, next) => {
 ```
 
 #### Body Parsing
+
 - `express.json()` kullan (JSON body'ler için)
 - `express.urlencoded({ extended: true })` kullan (form data için)
 - Body size limit'leri ayarla (dosya upload için)
 
 #### Static Files
+
 - Static file serving için `express.static()` kullan
 - Public klasörü için middleware ekle (gerekirse)
 - CDN kullanmayı tercih et (production için)
 
 #### Security Middleware
+
 - **helmet.js** kullan (security headers için)
 - **cors** kullan (cross-origin requests için)
 - **express-rate-limit** kullan (rate limiting için)
 - **express-validator** veya **Zod** kullan (validation için)
 
 #### Express Best Practices
+
 - Route parameter validation yap (`req.params.id` kontrol et)
 - Query parameter validation yap
 - Request body validation **MUTLAKA** yap (middleware ile)
@@ -122,12 +249,14 @@ router.get('/movies', async (req, res, next) => {
 - RESTful convention'lara uy
 
 #### Express + TypeScript
+
 - `@types/express` package'ını kullan
 - Request ve Response type'larını doğru kullan
 - NextFunction type'ını import et (`express` package'ından)
 - Custom middleware type'larını tanımla
 
 ### Node.js + TypeScript
+
 - TypeScript strict mode kullan
 - ES6+ syntax kullan
 - Async/await pattern'lerini kullan (callback'lerden kaçın)
@@ -137,11 +266,13 @@ router.get('/movies', async (req, res, next) => {
 ### API Standartları
 
 #### Endpoint Yapısı
+
 - RESTful naming convention kullan
 - Version control için `/api/v1/` prefix kullan
 - Resource-based URL'ler (örn: `/api/v1/movies`, `/api/v1/theaters`)
 
 #### HTTP Methods
+
 - `GET` - Data okuma
 - `POST` - Yeni resource oluşturma
 - `PUT` - Tüm resource güncelleme
@@ -149,7 +280,9 @@ router.get('/movies', async (req, res, next) => {
 - `DELETE` - Resource silme
 
 #### Response Format
+
 - Standart response format kullan:
+
 ```typescript
 {
   success: boolean;
@@ -188,12 +321,14 @@ router.get('/movies', async (req, res, next) => {
 ### Sequelize ORM Kuralları
 
 #### Model Tanımlama
+
 - Tüm modeller TypeScript ile tanımla
 - Model attribute'ları için interface/type tanımla
 - Associations'ları doğru kur (hasMany, belongsTo, hasOne, belongsToMany)
 - Model hook'ları kullan (beforeCreate, afterFind, vb.)
 
 #### Migration'lar
+
 - **Her değişiklik için migration oluştur**
 - Migration'ları version control'da tut
 - Migration isimleri açıklayıcı olsun (örn: `20240101-create-movies-table.js`)
@@ -201,6 +336,7 @@ router.get('/movies', async (req, res, next) => {
 - Production'da migration'ları dikkatli çalıştır
 
 #### Query Best Practices
+
 - Sequelize query method'larını kullan (findAll, findOne, create, update, destroy)
 - Raw SQL'den **MÜMKÜN OLDUĞUNCA KAÇIN** (güvenlik için)
 - Eager loading kullan (include ile N+1 problem'den kaçın)
@@ -208,6 +344,7 @@ router.get('/movies', async (req, res, next) => {
 - Pagination **MUTLAKA** ekle (limit, offset veya cursor-based)
 
 #### Örnek Pattern
+
 ```typescript
 // ✅ İYİ
 const movies = await Movie.findAll({
@@ -215,7 +352,7 @@ const movies = await Movie.findAll({
   include: [{ model: Category }],
   limit: 20,
   offset: 0,
-  order: [['createdAt', 'DESC']]
+  order: [["createdAt", "DESC"]],
 });
 
 // ❌ KÖTÜ
@@ -225,17 +362,20 @@ const query = `SELECT * FROM movies WHERE isActive = ${isActive}`;
 ### PostgreSQL Specific Rules
 
 #### Connection
+
 - Connection pooling kullan (Sequelize otomatik yapar)
 - Connection limit'lerini ayarla
 - Environment variable'lardan connection string al
 
 #### Database Design
+
 - Index'leri doğru kullan (performance için)
 - Foreign key constraint'leri kullan
 - Unique constraint'leri kullan
 - Check constraint'leri kullan (data validation için)
 
 #### Query Optimization
+
 - N+1 query problem'den kaçın (eager loading)
 - Index'li kolonlar üzerinde filtreleme yap
 - EXPLAIN ANALYZE ile query performance kontrol et
@@ -243,23 +383,27 @@ const query = `SELECT * FROM movies WHERE isActive = ${isActive}`;
 ### Redis Kullanımı
 
 #### Cache Stratejisi
+
 - Redis'i cache layer olarak kullan
 - Cache key'lerini pattern'li oluştur (örn: `movie:${id}`, `user:${id}:sessions`)
 - TTL (Time To Live) **MUTLAKA** ayarla
 - Cache invalidation stratejisi belirle
 
 #### Session Store
+
 - Redis'i session store olarak kullan (Express-session ile)
 - Session key'lerini güvenli tut
 - Session expiration ayarla
 
 #### Redis Best Practices
+
 - Connection pooling kullan (redis client için)
 - Error handling ekle (Redis connection hataları için)
 - Cache miss durumlarını handle et
 - Redis cluster mode için hazır ol (production için)
 
 #### Örnek Pattern
+
 ```typescript
 // Cache pattern
 const cacheKey = `movie:${movieId}`;

@@ -22,6 +22,12 @@ export default function BlogListPage() {
       return;
     }
 
+    // Eğer aktif tab farklı bir path'e aitse, URL güncelleniyor olabilir, tab ekleme
+    const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId);
+    if (activeTab && activeTab.path !== currentPath) {
+      return;
+    }
+
     if (pageConfig) {
       addTab({
         title: pageConfig.title,

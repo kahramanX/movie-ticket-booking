@@ -152,32 +152,9 @@ export const TabProvider: React.FC<{ children: ReactNode }> = ({
     const tabToRemove = state.tabs.find((tab) => tab.id === tabId);
     if (!tabToRemove) return;
 
-    const isActiveTab = state.activeTabId === tabId;
-    const tabIndex = state.tabs.findIndex((tab) => tab.id === tabId);
-    const remainingTabs = state.tabs.filter((tab) => tab.id !== tabId);
-
-    // ÖNCE URL'yi güncelle
-    if (isActiveTab) {
-      if (remainingTabs.length > 0) {
-        const newActiveTabId =
-          tabIndex > 0 ? remainingTabs[tabIndex - 1].id : remainingTabs[0].id;
-        const newActiveTab = remainingTabs.find(
-          (tab) => tab.id === newActiveTabId,
-        );
-        if (newActiveTab) {
-          router.replace(newActiveTab.path);
-        }
-      } else {
-        router.replace("/panel");
-      }
-      // URL güncellenmesi için kısa bir bekleme, sonra dispatch
-      setTimeout(() => {
-        dispatch({ type: "REMOVE_TAB", payload: tabId });
-      }, 0);
-    } else {
-      // Aktif tab değilse hemen kaldır
-      dispatch({ type: "REMOVE_TAB", payload: tabId });
-    }
+    // Direkt dispatch yap - reducer yeni aktif tab'ı belirleyecek
+    // URL güncellemesi useEffect (207-223) tarafından otomatik yapılacak
+    dispatch({ type: "REMOVE_TAB", payload: tabId });
   };
 
   // State değişikliklerini logla

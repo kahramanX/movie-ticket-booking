@@ -1,10 +1,14 @@
 "use client";
 
+import { useLanguage } from "@/contexts/languageContext";
+
 export const MovieList = () => {
+  const { t } = useLanguage();
+
   return (
     <div className="flex-1 flex items-center justify-center p-8">
       <div className="text-center">
-        <h1 className="text-3xl font-bold">Film Listesi</h1>
+        <h1 className="text-3xl font-bold">{t("Movie List")}</h1>
       </div>
     </div>
   );

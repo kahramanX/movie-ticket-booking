@@ -137,10 +137,64 @@ export const TabProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const removeTab = (tabId: string) => {
-    // Tab'ı state'den kaldır - reducer yeni aktif tab'ı belirleyecek
-    dispatch({ type: "REMOVE_TAB", payload: tabId });
-    // URL güncellemesi useEffect tarafından yapılacak
+    console.log("=== REMOVE TAB DEBUG ===");
+    console.log("TabId to remove:", tabId);
+    console.log(
+      "Current tabs:",
+      state.tabs.map((t) => ({ id: t.id, title: t.title, path: t.path })),
+    );
+    const activeTab = state.tabs.find((t) => t.id === state.activeTabId);
+    console.log(
+      "Active tab ID:",
+      state.activeTabId,
+      activeTab ? `(${activeTab.path})` : "(none)",
+    );
+    const tabToRemove = state.tabs.find((tab) => tab.id === tabId);
+    if (!tabToRemove) return;
+
+    const isActiveTab = state.activeTabId === tabId;
+    const tabIndex = state.tabs.findIndex((tab) => tab.id === tabId);
+    const remainingTabs = state.tabs.filter((tab) => tab.id !== tabId);
+
+    // ÖNCE URL'yi güncelle
+    if (isActiveTab) {
+      if (remainingTabs.length > 0) {
+        const newActiveTabId =
+          tabIndex > 0 ? remainingTabs[tabIndex - 1].id : remainingTabs[0].id;
+        const newActiveTab = remainingTabs.find(
+          (tab) => tab.id === newActiveTabId,
+        );
+        if (newActiveTab) {
+          router.replace(newActiveTab.path);
+        }
+      } else {
+        router.replace("/panel");
+      }
+      // URL güncellenmesi için kısa bir bekleme, sonra dispatch
+      setTimeout(() => {
+        dispatch({ type: "REMOVE_TAB", payload: tabId });
+      }, 0);
+    } else {
+      // Aktif tab değilse hemen kaldır
+      dispatch({ type: "REMOVE_TAB", payload: tabId });
+    }
   };
+
+  // State değişikliklerini logla
+  useEffect(() => {
+    console.log("=== TAB STATE CHANGED ===");
+    console.log(
+      "Tabs array:",
+      state.tabs.map((t) => ({ id: t.id, title: t.title, path: t.path })),
+    );
+    const activeTab = state.tabs.find((t) => t.id === state.activeTabId);
+    console.log(
+      "Active tab ID:",
+      state.activeTabId,
+      activeTab ? `(${activeTab.path})` : "(none)",
+    );
+    console.log("Tabs count:", state.tabs.length);
+  }, [state.tabs, state.activeTabId]);
 
   const setActiveTab = (tabId: string) => {
     dispatch({ type: "SET_ACTIVE_TAB", payload: tabId });

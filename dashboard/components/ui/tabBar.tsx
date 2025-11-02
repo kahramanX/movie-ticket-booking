@@ -40,7 +40,7 @@ export const TabBar = () => {
     };
   }, [state.tabs]);
 
-  const scroll = (direction: "left" | "right") => {
+  const handleScroll = (direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
@@ -57,6 +57,15 @@ export const TabBar = () => {
     });
   };
 
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId);
+  };
+
+  const handleTabClose = (e: React.MouseEvent, tabId: string) => {
+    e.stopPropagation();
+    removeTab(tabId);
+  };
+
   if (state.tabs.length === 0) {
     return null;
   }
@@ -70,7 +79,7 @@ export const TabBar = () => {
             variant="ghost"
             size="sm"
             className="h-6 w-6 p-0 hover:bg-muted"
-            onClick={() => scroll("left")}
+            onClick={() => handleScroll("left")}
             aria-label="Scroll left"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -94,7 +103,7 @@ export const TabBar = () => {
             )}
           >
             <button
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabClick(tab.id)}
               className="text-left text-xs md:text-sm font-medium truncate flex items-center gap-1"
             >
               {tab.path === "/panel" && (
@@ -108,10 +117,7 @@ export const TabBar = () => {
                 variant="ghost"
                 size="sm"
                 className="h-4 w-4 p-0 flex-shrink-0 hover:bg-destructive/20 hover:text-white"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeTab(tab.id);
-                }}
+                onClick={(e) => handleTabClose(e, tab.id)}
               >
                 <X className="h-3 w-3" />
               </Button>
@@ -127,7 +133,7 @@ export const TabBar = () => {
             variant="ghost"
             size="sm"
             className="h-6 w-6 p-0 hover:bg-muted"
-            onClick={() => scroll("right")}
+            onClick={() => handleScroll("right")}
             aria-label="Scroll right"
           >
             <ChevronRight className="h-4 w-4" />

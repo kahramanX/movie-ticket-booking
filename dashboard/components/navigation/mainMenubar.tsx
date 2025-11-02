@@ -33,8 +33,32 @@ export const MainMenubar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const router = useRouter();
 
+  interface MenuItemType {
+    label: string;
+    href?: string;
+    onClick?: () => void;
+    openInTab?: boolean;
+    tabTitle?: string;
+  }
+
+  const handleHomeClick = () => {
+    // /panel için tab aç
+    const pageConfig = pageComponents[""];
+    if (pageConfig) {
+      addTab({
+        title: pageConfig.title,
+        path: "/panel",
+        content: pageConfig.component,
+        closable: true,
+      });
+    }
+  };
+
   // Menu item click handler
-  const handleMenuClick = (item: any, originalItem: any) => {
+  const handleMenuClick = (
+    item: MenuItemType,
+    originalItem: MenuItemType,
+  ) => {
     if (originalItem.openInTab && item.href) {
       // URL'den slug'ı çıkar
       const slug = item.href.replace("/panel/", "");
@@ -71,18 +95,7 @@ export const MainMenubar = () => {
           <MenubarMenu>
             <MenubarTrigger
               className="flex items-center gap-2 cursor-pointer"
-              onClick={() => {
-                // /panel için tab aç
-                const pageConfig = pageComponents[""];
-                if (pageConfig) {
-                  addTab({
-                    title: pageConfig.title,
-                    path: "/panel",
-                    content: pageConfig.component,
-                    closable: true,
-                  });
-                }
-              }}
+              onClick={handleHomeClick}
             >
               <Home className="h-4 w-4" />
               {menuSections[0].title}

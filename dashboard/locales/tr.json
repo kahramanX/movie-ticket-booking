@@ -94,5 +94,12 @@
   "An unexpected error occurred": "Beklenmeyen bir hata oluştu. Lütfen sayfayı yenilemeyi deneyin.",
   "Debug Info": "Debug Bilgisi",
   "Try Again Button": "Tekrar Dene",
-  "Go to Homepage": "Ana Sayfaya Dön"
+  "Go to Homepage": "Ana Sayfaya Dön",
+  "Select a page from the menu to get started": "Menüden bir sayfa seçerek başlayın",
+  "Movie List": "Film Listesi",
+  "Movie Category List": "Film Kategorileri",
+  "Blog List": "Blog Listesi",
+  "Blog Category List": "Blog Kategorileri",
+  "Blog Tag List": "Blog Etiketleri",
+  "Add Blog": "Blog Ekle"
 }

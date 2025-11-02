@@ -94,5 +94,12 @@
   "An unexpected error occurred": "An unexpected error occurred. Please try refreshing the page.",
   "Debug Info": "Debug Info",
   "Try Again Button": "Try Again",
-  "Go to Homepage": "Go to Homepage"
+  "Go to Homepage": "Go to Homepage",
+  "Select a page from the menu to get started": "Select a page from the menu to get started",
+  "Movie List": "Movie List",
+  "Movie Category List": "Movie Category List",
+  "Blog List": "Blog List",
+  "Blog Category List": "Blog Category List",
+  "Blog Tag List": "Blog Tag List",
+  "Add Blog": "Add Blog"
 }

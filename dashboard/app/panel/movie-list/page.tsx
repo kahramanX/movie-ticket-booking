@@ -5,16 +5,16 @@ import { usePathname } from "next/navigation";
 import { useTab } from "@/contexts/tabContext";
 import { pageComponents } from "@/config/pageComponents";
 
-export default function PanelPage() {
+export default function MovieListPage() {
   const { addTab, state } = useTab();
   const pathname = usePathname();
 
   useEffect(() => {
     // Sadece pathname bu sayfaya aitse çalış
-    if (pathname !== "/panel") return;
+    if (pathname !== "/panel/movie-list") return;
 
-    const pageConfig = pageComponents[""];
-    const currentPath = "/panel";
+    const pageConfig = pageComponents["movie-list"];
+    const currentPath = "/panel/movie-list";
 
     // Eğer bu path'te zaten bir tab varsa, tekrar ekleme
     const existingTab = state.tabs.find((tab) => tab.path === currentPath);

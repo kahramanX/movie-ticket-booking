@@ -25,7 +25,10 @@ interface MenuSectionProps {
     tabTitle?: string;
   }>;
   onItemClick?: () => void;
-  onMenuClick?: (item: any, originalItem: any) => void;
+  onMenuClick?: (
+    item: { label: string; href?: string; onClick?: () => void },
+    originalItem: { label: string; href?: string; onClick?: () => void },
+  ) => void;
 }
 
 export const MenuItem = ({
@@ -94,8 +97,19 @@ export const MenuContent = ({ onItemClick }: { onItemClick?: () => void }) => {
   const { t } = useLanguage();
   const { addTab } = useTab();
 
+  interface MenuItemType {
+    label: string;
+    href?: string;
+    onClick?: () => void;
+    openInTab?: boolean;
+    tabTitle?: string;
+  }
+
   // Menu item click handler
-  const handleMenuClick = (item: any, originalItem: any) => {
+  const handleMenuClick = (
+    item: MenuItemType,
+    originalItem: MenuItemType,
+  ) => {
     if (originalItem.openInTab && item.href) {
       // URL'den slug'ı çıkar
       const slug = item.href.replace("/panel/", "");

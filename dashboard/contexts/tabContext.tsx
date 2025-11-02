@@ -8,6 +8,7 @@ import React, {
   ReactNode,
 } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { pageComponents } from "@/config/pageComponents";
 
 // Tab tipi tanımlaması
 export interface Tab {
@@ -183,8 +184,28 @@ export const TabProvider: React.FC<{ children: ReactNode }> = ({
 
   // URL senkronizasyonu - aktif tab değiştiğinde URL'i güncelle
   useEffect(() => {
+    // Hiç tab kalmadığında /panel tab'ını otomatik aç
+    if (state.tabs.length === 0) {
+      const pageConfig = pageComponents[""];
+      const existingPanelTab = state.tabs.find((tab) => tab.path === "/panel");
+
+      if (!existingPanelTab && pageConfig) {
+        // /panel tab'ı yoksa ekle
+        addTab({
+          title: pageConfig.title,
+          path: "/panel",
+          content: pageConfig.component,
+          closable: true,
+        });
+      } else if (pathname !== "/panel") {
+        // /panel tab'ı varsa veya yoksa ama pathname farklıysa, /panel'e git
+        router.replace("/panel");
+      }
+      return;
+    }
+
     if (!state.activeTabId) {
-      // Hiç aktif tab yoksa ve /panel'de değilsek, /panel'e git
+      // Aktif tab yoksa ama tab'lar varsa, /panel'e git
       if (pathname !== "/panel") {
         router.replace("/panel");
       }

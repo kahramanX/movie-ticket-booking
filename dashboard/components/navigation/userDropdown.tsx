@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,12 +15,28 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/contexts/themeContext";
 import { useLanguage } from "@/contexts/languageContext";
+import { useTab } from "@/contexts/tabContext";
+import { pageComponents } from "@/config/pageComponents";
 import { User, Settings, LogOut, Sun, Moon, Languages } from "lucide-react";
 
 export const UserDropdown = () => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const { state, dispatch, t } = useLanguage();
+  const { addTab } = useTab();
+
+  const handleProfileClick = () => {
+    // Profile tab'ını aç
+    const pageConfig = pageComponents["profile"];
+    if (pageConfig) {
+      addTab({
+        title: pageConfig.title,
+        path: "/panel/profile",
+        content: pageConfig.component,
+        closable: true,
+      });
+    }
+  };
 
   const handleLogout = () => {
     // Cookie'yi sil
@@ -48,11 +63,14 @@ export const UserDropdown = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="">
-        <DropdownMenuItem className="cursor-pointer">
-          <Link href="/panel/profile" className="flex items-center gap-2">
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={handleProfileClick}
+        >
+          <div className="flex items-center gap-2">
             <Settings className="mr-2 h-4 w-4" />
             <span>{t("Profile")}</span>
-          </Link>
+          </div>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
 

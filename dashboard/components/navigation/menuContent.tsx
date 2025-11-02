@@ -92,7 +92,7 @@ export const MenuSection = ({
 
 export const MenuContent = ({ onItemClick }: { onItemClick?: () => void }) => {
   const { t } = useLanguage();
-  const { addTab, clearAllTabs } = useTab();
+  const { addTab } = useTab();
 
   // Menu item click handler
   const handleMenuClick = (item: any, originalItem: any) => {
@@ -134,11 +134,19 @@ export const MenuContent = ({ onItemClick }: { onItemClick?: () => void }) => {
       {/* Dashboard Link - Öne çıkarılmış */}
       <div className="text-center">
         <MenuItem
-          href="/panel"
           icon={<Home className="h-5 w-5" />}
           className="font-medium text-lg justify-center bg-primary/10 hover:bg-primary/20 py-3"
           onClick={() => {
-            clearAllTabs(); // Tüm tabları kapat
+            // /panel için tab aç
+            const pageConfig = pageComponents[""];
+            if (pageConfig) {
+              addTab({
+                title: pageConfig.title,
+                path: "/panel",
+                content: pageConfig.component,
+                closable: true,
+              });
+            }
             onItemClick?.(); // Drawer'ı kapat
           }}
         >

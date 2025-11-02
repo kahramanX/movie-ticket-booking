@@ -33,40 +33,7 @@ export const menuConfig: MenuSection[] = [
       },
     ],
   },
-  {
-    title: "Theaters",
-    items: [
-      {
-        label: "Theater List",
-        href: "/panel/theater-list",
-        openInTab: true,
-        tabTitle: "Sinema Listesi",
-      },
-      {
-        label: "Theater Management",
-        href: "/panel/theater-management",
-        openInTab: true,
-        tabTitle: "Sinema Yönetimi",
-      },
-      {
-        label: "Seat Layout",
-        href: "/panel/seat-layout",
-        openInTab: true,
-        tabTitle: "Koltuk Düzeni",
-      },
-    ],
-  },
-  {
-    title: "Reservations",
-    items: [
-      {
-        label: "Reservation List",
-        href: "/panel/reservation-list",
-        openInTab: true,
-        tabTitle: "Rezervasyon Listesi",
-      },
-    ],
-  },
+
   {
     title: "Users",
     items: [
@@ -81,18 +48,6 @@ export const menuConfig: MenuSection[] = [
         href: "/panel/user-list",
         openInTab: true,
         tabTitle: "Kullanıcı Listesi",
-      },
-      {
-        label: "VIP Customers",
-        href: "/panel/customers/vip",
-        openInTab: true,
-        tabTitle: "VIP Müşteriler",
-      },
-      {
-        label: "Membership Management",
-        href: "/panel/membership",
-        openInTab: true,
-        tabTitle: "Üyelik Yönetimi",
       },
     ],
   },
@@ -116,6 +71,12 @@ export const menuConfig: MenuSection[] = [
         href: "/panel/blog-tag-list",
         openInTab: true,
         tabTitle: "Blog Etiketleri",
+      },
+      {
+        label: "Add Blog",
+        href: "/panel/add-blog",
+        openInTab: true,
+        tabTitle: "Blog Ekle",
       },
     ],
   },

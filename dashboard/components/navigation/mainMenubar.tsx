@@ -29,7 +29,7 @@ import { Home, Menu } from "lucide-react";
 
 export const MainMenubar = () => {
   const { t } = useLanguage();
-  const { addTab, clearAllTabs } = useTab();
+  const { addTab } = useTab();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const router = useRouter();
 
@@ -37,15 +37,15 @@ export const MainMenubar = () => {
   const handleMenuClick = (item: any, originalItem: any) => {
     if (originalItem.openInTab && item.href) {
       // URL'den slug'ı çıkar
-      const slug = item.href.replace('/panel/', '');
+      const slug = item.href.replace("/panel/", "");
       const pageConfig = pageComponents[slug];
-      
+
       if (pageConfig) {
         addTab({
           title: originalItem.tabTitle || pageConfig.title,
           path: item.href,
           content: pageConfig.component,
-          closable: true
+          closable: true,
         });
       }
     }
@@ -69,11 +69,19 @@ export const MainMenubar = () => {
       <div className="hidden md:block">
         <Menubar>
           <MenubarMenu>
-            <MenubarTrigger 
+            <MenubarTrigger
               className="flex items-center gap-2 cursor-pointer"
               onClick={() => {
-                clearAllTabs(); // Tüm tabları kapat
-                router.push('/panel'); // Dashboard'a git
+                // /panel için tab aç
+                const pageConfig = pageComponents[""];
+                if (pageConfig) {
+                  addTab({
+                    title: pageConfig.title,
+                    path: "/panel",
+                    content: pageConfig.component,
+                    closable: true,
+                  });
+                }
               }}
             >
               <Home className="h-4 w-4" />
@@ -87,12 +95,13 @@ export const MainMenubar = () => {
               <MenubarTrigger>{section.title}</MenubarTrigger>
               <MenubarContent>
                 {section.items.map((item, itemIndex) => {
-                  const originalItem = menuConfig[sectionIndex + 1].items[itemIndex];
-                  
+                  const originalItem =
+                    menuConfig[sectionIndex + 1].items[itemIndex];
+
                   return (
                     <MenubarItem key={itemIndex}>
                       {item.openInTab ? (
-                        <div 
+                        <div
                           className="cursor-pointer w-full"
                           onClick={() => handleMenuClick(item, originalItem)}
                         >

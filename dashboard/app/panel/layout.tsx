@@ -19,7 +19,7 @@ export default function PanelLayout({
 
         {/* Main Content - Tab Content veya Children */}
         <main className="flex-1 flex flex-col">
-          <TabContent />
+          <TabContent>{children}</TabContent>
         </main>
 
         <Footer />

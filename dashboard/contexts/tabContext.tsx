@@ -148,15 +148,17 @@ export const TabProvider: React.FC<{ children: ReactNode }> = ({
     dispatch({ type: "CLEAR_ALL_TABS" });
   };
 
-  // URL senkronizasyonu - sadece tab değiştiğinde URL'i güncelle
+  // URL senkronizasyonu - aktif tab değiştiğinde URL'i güncelle
   useEffect(() => {
+    if (!state.activeTabId) return;
+
     const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId);
 
     if (activeTab && pathname !== activeTab.path) {
-      // URL'i güncelle ama history'ye ekleme (replace kullan)
       router.replace(activeTab.path);
     }
-  }, [state.activeTabId]); // Sadece activeTabId değiştiğinde çalış
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.activeTabId, state.tabs]); // Sadece activeTabId veya tabs değiştiğinde çalış
 
   // Pathname değiştiğinde aktif tab'ı güncelle - sadece manuel URL değişikliklerinde
   useEffect(() => {
@@ -169,6 +171,7 @@ export const TabProvider: React.FC<{ children: ReactNode }> = ({
     if (matchingTab && state.activeTabId !== matchingTab.id) {
       dispatch({ type: "SET_ACTIVE_TAB", payload: matchingTab.id });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]); // Sadece pathname değiştiğinde çalış
 
   return (

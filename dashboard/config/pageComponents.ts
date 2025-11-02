@@ -1,65 +1,77 @@
 import { ComponentType } from "react";
 
 // Page component imports
-import { BlogListPage } from "@/containers/pages/blogList";
-import { BlogCategoriesPage } from "@/containers/pages/blogCategories";
+import { Dashboard } from "@/containers/tabPages/dashboard";
+import { Profile } from "@/containers/tabPages/profile";
+import { MovieList } from "@/containers/tabPages/movieList";
+import { MovieCategoryList } from "@/containers/tabPages/movieCategoryList";
+import { AdminList } from "@/containers/tabPages/adminList";
+import { UserList } from "@/containers/tabPages/userList";
+import { BlogList } from "@/containers/tabPages/blogList";
+import { BlogCategoryList } from "@/containers/tabPages/blogCategoryList";
+import { BlogTagList } from "@/containers/tabPages/blogTagList";
+import { AddBlog } from "@/containers/tabPages/addBlog";
 
 // Page component interface
 export interface PageConfig {
   title: string;
   component: ComponentType;
   description?: string;
+  showHomeIcon?: boolean; // Home icon gösterilecek mi?
 }
 
 // URL slug to component mapping
 export const pageComponents: Record<string, PageConfig> = {
+  // Dashboard
+  "": {
+    title: "",
+    component: Dashboard,
+    showHomeIcon: true,
+  },
+
+  // Profile
+  profile: {
+    title: "Profil",
+    component: Profile,
+  },
+
   // Movies
-  'movie-list': {
-    title: 'Film Listesi',
-    component: BlogListPage, // Geçici olarak BlogListPage kullanıyoruz
-    description: 'Tüm filmleri görüntüle ve yönet'
+  "movie-list": {
+    title: "Film Listesi",
+    component: MovieList,
   },
-  'movie-category-list': {
-    title: 'Film Kategorileri',
-    component: BlogCategoriesPage, // Geçici olarak BlogCategoriesPage kullanıyoruz
-    description: 'Film kategorilerini yönet'
+  "movie-category-list": {
+    title: "Film Kategorileri",
+    component: MovieCategoryList,
   },
-  
-  // Theaters
-  'theater-list': {
-    title: 'Sinema Listesi',
-    component: BlogListPage, // Placeholder
-    description: 'Sinema salonlarını yönet'
-  },
-  'theater-management': {
-    title: 'Salon Yönetimi',
-    component: BlogCategoriesPage, // Placeholder
-    description: 'Salon ayarlarını düzenle'
-  },
-  
-  // Reservations
-  'reservation-list': {
-    title: 'Rezervasyon Listesi',
-    component: BlogListPage, // Placeholder
-    description: 'Tüm rezervasyonları görüntüle'
-  },
-  'new-reservation': {
-    title: 'Yeni Rezervasyon',
-    component: BlogCategoriesPage, // Placeholder
-    description: 'Yeni rezervasyon oluştur'
-  },
-  
+
   // Users
-  'admin-list': {
-    title: 'Yönetici Listesi',
-    component: BlogListPage, // Placeholder
-    description: 'Sistem yöneticilerini yönet'
+  "admin-list": {
+    title: "Yönetici Listesi",
+    component: AdminList,
   },
-  'user-list': {
-    title: 'Kullanıcı Listesi',
-    component: BlogCategoriesPage, // Placeholder
-    description: 'Tüm kullanıcıları görüntüle'
-  }
+  "user-list": {
+    title: "Kullanıcı Listesi",
+    component: UserList,
+  },
+
+  // Blogs
+  "blog-list": {
+    title: "Blog Listesi",
+    component: BlogList,
+  },
+  "blog-category-list": {
+    title: "Blog Kategorileri",
+    component: BlogCategoryList,
+  },
+  "blog-tag-list": {
+    title: "Blog Etiketleri",
+    component: BlogTagList,
+  },
+  "add-blog": {
+    title: "Blog Ekle",
+    component: AddBlog,
+  },
 };
 
 // Helper function to get page config by slug

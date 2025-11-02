@@ -5,16 +5,16 @@ import { usePathname } from "next/navigation";
 import { useTab } from "@/contexts/tabContext";
 import { pageComponents } from "@/config/pageComponents";
 
-export default function Profile() {
+export default function AdminListPage() {
   const { addTab, state } = useTab();
   const pathname = usePathname();
 
   useEffect(() => {
     // Sadece pathname bu sayfaya aitse çalış
-    if (pathname !== "/panel/profile") return;
+    if (pathname !== "/panel/admin-list") return;
 
-    const pageConfig = pageComponents["profile"];
-    const currentPath = "/panel/profile";
+    const pageConfig = pageComponents["admin-list"];
+    const currentPath = "/panel/admin-list";
 
     // Eğer bu path'te zaten bir tab varsa, tekrar ekleme
     const existingTab = state.tabs.find((tab) => tab.path === currentPath);

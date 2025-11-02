@@ -1,0 +1,394 @@
+# Cursor Rules - Server Project (Backend API)
+
+## Proje Bilgisi
+- **Proje:** Backend API Server
+- **Framework:** Express.js
+- **Runtime:** Node.js
+- **Language:** TypeScript
+- **Database:** PostgreSQL
+- **ORM:** Sequelize
+- **Cache/Session Store:** Redis
+
+## Genel Kurallar
+
+### Express.js Framework Kuralları
+
+#### Application Setup
+- Express app'i TypeScript ile yaz
+- `express()` instance'ını `app.ts` veya `index.ts` dosyasında oluştur
+- Middleware'leri doğru sırayla ekle (güvenlik → parsing → routing → error handling)
+- Port'u environment variable'dan al (`process.env.PORT || 3000`)
+
+#### Middleware Sıralaması
+```typescript
+// ✅ Doğru sıralama
+app.use(helmet());                    // Security headers
+app.use(cors());                      // CORS
+app.use(express.json());             // Body parser
+app.use(express.urlencoded());       // URL encoded parser
+app.use(cookieParser());              // Cookie parser
+app.use(expressSession());           // Session
+app.use('/api/v1', routes);          // Routes
+app.use(errorHandler);               // Error handler (en sonda)
+```
+
+#### Route Yapısı
+- Her resource için ayrı router dosyası oluştur
+- Router'ları `routes/` klasöründe tut
+- Router'ları `express.Router()` ile oluştur
+- Route handler'ları controller'lara taşı (route dosyalarında direkt logic olmasın)
+
+#### Route Handler Pattern
+```typescript
+// ✅ İYİ - Controller kullan
+router.get('/movies', movieController.getAllMovies);
+router.get('/movies/:id', movieController.getMovieById);
+router.post('/movies', validateMovie, movieController.createMovie);
+
+// ❌ KÖTÜ - Route içinde logic
+router.get('/movies', async (req, res) => {
+  const movies = await Movie.findAll();
+  res.json(movies);
+});
+```
+
+#### Request/Response Typing
+- Express Request ve Response type'larını extend et
+- Custom types kullan:
+```typescript
+interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+    email: string;
+    role: string;
+  };
+}
+```
+
+#### Async Error Handling
+- Async route handler'larda **MUTLAKA** error handling yap
+- Error middleware kullan (express-async-errors veya try-catch)
+- Custom error class'ları oluştur
+
+#### Error Middleware Pattern
+```typescript
+// ✅ İYİ - Error middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  logger.error(err);
+  res.status(500).json({
+    success: false,
+    error: {
+      code: 'INTERNAL_ERROR',
+      message: process.env.NODE_ENV === 'production' 
+        ? 'Internal server error' 
+        : err.message
+    }
+  });
+});
+
+// Route handler'da
+router.get('/movies', async (req, res, next) => {
+  try {
+    const movies = await Movie.findAll();
+    res.json({ success: true, data: movies });
+  } catch (error) {
+    next(error); // Error middleware'e gönder
+  }
+});
+```
+
+#### Body Parsing
+- `express.json()` kullan (JSON body'ler için)
+- `express.urlencoded({ extended: true })` kullan (form data için)
+- Body size limit'leri ayarla (dosya upload için)
+
+#### Static Files
+- Static file serving için `express.static()` kullan
+- Public klasörü için middleware ekle (gerekirse)
+- CDN kullanmayı tercih et (production için)
+
+#### Security Middleware
+- **helmet.js** kullan (security headers için)
+- **cors** kullan (cross-origin requests için)
+- **express-rate-limit** kullan (rate limiting için)
+- **express-validator** veya **Zod** kullan (validation için)
+
+#### Express Best Practices
+- Route parameter validation yap (`req.params.id` kontrol et)
+- Query parameter validation yap
+- Request body validation **MUTLAKA** yap (middleware ile)
+- Response format'ını standart tut
+- HTTP method'larını doğru kullan
+- RESTful convention'lara uy
+
+#### Express + TypeScript
+- `@types/express` package'ını kullan
+- Request ve Response type'larını doğru kullan
+- NextFunction type'ını import et (`express` package'ından)
+- Custom middleware type'larını tanımla
+
+### Node.js + TypeScript
+- TypeScript strict mode kullan
+- ES6+ syntax kullan
+- Async/await pattern'lerini kullan (callback'lerden kaçın)
+- Error handling için try-catch kullan
+- Process manager kullan (PM2 production için, nodemon development için)
+
+### API Standartları
+
+#### Endpoint Yapısı
+- RESTful naming convention kullan
+- Version control için `/api/v1/` prefix kullan
+- Resource-based URL'ler (örn: `/api/v1/movies`, `/api/v1/theaters`)
+
+#### HTTP Methods
+- `GET` - Data okuma
+- `POST` - Yeni resource oluşturma
+- `PUT` - Tüm resource güncelleme
+- `PATCH` - Kısmi resource güncelleme
+- `DELETE` - Resource silme
+
+#### Response Format
+- Standart response format kullan:
+```typescript
+{
+  success: boolean;
+  data?: any;
+  message?: string;
+  error?: {
+    code: string;
+    message: string;
+  }
+}
+```
+
+### Error Handling
+
+- Tüm hataları yakala ve standart format'ta döndür
+- HTTP status code'ları doğru kullan:
+  - `200` - Success
+  - `201` - Created
+  - `400` - Bad Request
+  - `401` - Unauthorized
+  - `403` - Forbidden
+  - `404` - Not Found
+  - `409` - Conflict
+  - `422` - Unprocessable Entity
+  - `500` - Internal Server Error
+- Error logging yap (Winston, Pino gibi logger kullan)
+- Production'da sensitive data loglama
+
+### Validation
+
+- Request validation **MUTLAKA** yap
+- **Zod** veya **Yup** validation library kullan (Joi da kullanılabilir)
+- Validation error'ları detaylı ve kullanıcı dostu döndür
+- Sequelize model validation'ları da kullan (double validation)
+
+### Sequelize ORM Kuralları
+
+#### Model Tanımlama
+- Tüm modeller TypeScript ile tanımla
+- Model attribute'ları için interface/type tanımla
+- Associations'ları doğru kur (hasMany, belongsTo, hasOne, belongsToMany)
+- Model hook'ları kullan (beforeCreate, afterFind, vb.)
+
+#### Migration'lar
+- **Her değişiklik için migration oluştur**
+- Migration'ları version control'da tut
+- Migration isimleri açıklayıcı olsun (örn: `20240101-create-movies-table.js`)
+- Up ve down metodlarını her zaman implement et
+- Production'da migration'ları dikkatli çalıştır
+
+#### Query Best Practices
+- Sequelize query method'larını kullan (findAll, findOne, create, update, destroy)
+- Raw SQL'den **MÜMKÜN OLDUĞUNCA KAÇIN** (güvenlik için)
+- Eager loading kullan (include ile N+1 problem'den kaçın)
+- Transaction kullan (multiple operation'lar için)
+- Pagination **MUTLAKA** ekle (limit, offset veya cursor-based)
+
+#### Örnek Pattern
+```typescript
+// ✅ İYİ
+const movies = await Movie.findAll({
+  where: { isActive: true },
+  include: [{ model: Category }],
+  limit: 20,
+  offset: 0,
+  order: [['createdAt', 'DESC']]
+});
+
+// ❌ KÖTÜ
+const query = `SELECT * FROM movies WHERE isActive = ${isActive}`;
+```
+
+### PostgreSQL Specific Rules
+
+#### Connection
+- Connection pooling kullan (Sequelize otomatik yapar)
+- Connection limit'lerini ayarla
+- Environment variable'lardan connection string al
+
+#### Database Design
+- Index'leri doğru kullan (performance için)
+- Foreign key constraint'leri kullan
+- Unique constraint'leri kullan
+- Check constraint'leri kullan (data validation için)
+
+#### Query Optimization
+- N+1 query problem'den kaçın (eager loading)
+- Index'li kolonlar üzerinde filtreleme yap
+- EXPLAIN ANALYZE ile query performance kontrol et
+
+### Redis Kullanımı
+
+#### Cache Stratejisi
+- Redis'i cache layer olarak kullan
+- Cache key'lerini pattern'li oluştur (örn: `movie:${id}`, `user:${id}:sessions`)
+- TTL (Time To Live) **MUTLAKA** ayarla
+- Cache invalidation stratejisi belirle
+
+#### Session Store
+- Redis'i session store olarak kullan (Express-session ile)
+- Session key'lerini güvenli tut
+- Session expiration ayarla
+
+#### Redis Best Practices
+- Connection pooling kullan (redis client için)
+- Error handling ekle (Redis connection hataları için)
+- Cache miss durumlarını handle et
+- Redis cluster mode için hazır ol (production için)
+
+#### Örnek Pattern
+```typescript
+// Cache pattern
+const cacheKey = `movie:${movieId}`;
+const cached = await redis.get(cacheKey);
+if (cached) return JSON.parse(cached);
+
+const movie = await Movie.findByPk(movieId);
+await redis.setex(cacheKey, 3600, JSON.stringify(movie)); // 1 saat TTL
+```
+
+### Code Organization
+
+```
+server/
+  ├── src/
+  │   ├── app.ts           # Express app configuration
+  │   ├── server.ts        # Server startup
+  │   ├── config/          # Configuration files (db, redis, etc.)
+  │   ├── controllers/     # Request handlers (Express route handlers)
+  │   ├── services/        # Business logic
+  │   ├── models/          # Sequelize models
+  │   ├── migrations/      # Sequelize migrations
+  │   ├── seeders/         # Sequelize seeders
+  │   ├── routes/          # Express route definitions
+  │   ├── middleware/      # Express middleware (auth, validation, error handling)
+  │   ├── utils/           # Utility functions
+  │   ├── types/           # TypeScript types/interfaces (Express Request/Response extensions)
+  │   ├── validators/      # Request validators (Zod/Yup schemas)
+  │   └── cache/           # Redis cache helpers
+```
+
+### Security
+
+- Authentication/Authorization implement et
+- Password'leri hash'le (**bcrypt** kullan, salt rounds: 10-12)
+- JWT token kullan (access + refresh token pattern)
+- CORS ayarlarını doğru yap
+- SQL Injection'dan korun (Sequelize otomatik yapar ama dikkat et)
+- XSS'den korun
+- Rate limiting ekle (express-rate-limit veya redis ile)
+- Environment variable'ları kullan (secret'lar için)
+- Helmet.js kullan (security headers için)
+
+### Environment Variables
+
+- `.env` dosyası kullan (development)
+- `.env.example` dosyası oluştur (template için)
+- Production'da environment variable'ları set et
+- `dotenv` package kullan
+- **ASLA** `.env` dosyasını commit etme
+
+### YAPILMAYACAKLAR ❌
+
+- ❌ Raw SQL injection riski olan sorgular (Sequelize kullan)
+- ❌ Password'leri plain text saklama
+- ❌ Secret'ları kodda hard-code etme
+- ❌ Error'ları direkt throw etme (handle et ve log'la)
+- ❌ Validation yapmadan database'e yazma
+- ❌ `any` type kullanma (TypeScript strict mode)
+- ❌ Console.log production'da bırakma (logger kullan)
+- ❌ Sensitive data loglama
+- ❌ Migration'ları manuel database'de yapma (migration kullan)
+- ❌ Redis connection error'larını handle etmeden kullanma
+- ❌ Cache TTL ayarlamadan Redis kullanma
+- ❌ N+1 query problem'ler oluşturma (eager loading kullan)
+- ❌ Transaction kullanmadan multiple operation yapma
+- ❌ Route handler'lar içinde direkt database logic yazma (service layer kullan)
+- ❌ Error handling middleware'i unutma
+- ❌ Middleware sırasını yanlış yapma
+- ❌ Request validation yapmadan controller'a gönderme
+- ❌ Express callback pattern kullanma (async/await kullan)
+
+### YAPILACAKLAR ✅
+
+- ✅ Her endpoint için validation (Zod/Yup)
+- ✅ Error handling ve logging (Winston/Pino)
+- ✅ Type-safe database queries (Sequelize types)
+- ✅ Environment variable'ları kullan
+- ✅ Authentication/Authorization
+- ✅ Rate limiting
+- ✅ API documentation (Swagger/OpenAPI)
+- ✅ Migration'ları version control'da tut
+- ✅ Redis cache stratejisi belirle
+- ✅ Cache invalidation implement et
+- ✅ Redis error handling ekle
+- ✅ Connection pooling kullan
+- ✅ Pagination ekle
+- ✅ Transaction kullan (multiple operations için)
+- ✅ Index'leri doğru kullan (performance)
+- ✅ Express middleware'leri doğru sırayla kullan
+- ✅ Route handler'ları controller'lara taşı
+- ✅ Error handling middleware ekle
+- ✅ Request validation middleware ekle
+- ✅ TypeScript ile Express type safety sağla
+- ✅ Unit tests yaz (Jest)
+- ✅ Integration tests yaz (Supertest)
+
+### Testing
+
+- Unit test'ler için **Jest** kullan
+- Integration test'ler için **Supertest** kullan
+- Test coverage %80'in üzerinde olmalı
+- Mock'ları doğru kullan
+- Test database'i ayrı tut
+- Test için migration'ları çalıştır
+
+### Documentation
+
+- API endpoint'lerini dokümante et
+- Swagger/OpenAPI kullan
+- Code comment'leri açıklayıcı yaz (JSDoc style)
+- README'yi güncel tut
+- Migration'ları dokümante et
+- Environment variable'ları dokümante et
+
+### Performance
+
+- Database query'leri optimize et
+- Redis cache kullan (frequently accessed data için)
+- Connection pooling kullan
+- Index'leri doğru kullan
+- Lazy loading yerine eager loading kullan
+- Pagination implement et
+- Response compression kullan (gzip)
+
+### Logging
+
+- Structured logging kullan (Winston, Pino)
+- Log levels kullan (error, warn, info, debug)
+- Production'da error ve warn log'ları
+- Development'da tüm log'lar
+- Log rotation implement et

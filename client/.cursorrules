@@ -1,0 +1,241 @@
+# Cursor Rules - Client Project (Müşteri Uygulaması)
+
+## Proje Bilgisi
+
+- **Proje:** Müşteri Uygulaması (Public Frontend)
+- **Framework:** Next.js 16 (App Router)
+- **UI Library:** React 19
+- **Styling:** Tailwind CSS + shadcn/ui (Radix UI)
+- **Language:** TypeScript (strict mode)
+
+## Genel Kurallar
+
+### Next.js 16 App Router Kuralları
+
+#### App Router Yapısı
+
+- App Router pattern kullan (`app/` klasörü)
+- Route'lar dosya sisteminden oluşur (`app/page.tsx`, `app/movies/page.tsx`)
+- Layout'ları `layout.tsx` dosyalarında tanımla
+- Loading state'leri için `loading.tsx` kullan
+- Error handling için `error.tsx` kullan
+- Not found sayfaları için `not-found.tsx` kullan
+
+#### Server ve Client Components
+
+- Default olarak **Server Component** kullan (performance için)
+- Client component'ler için `"use client"` directive **MUTLAKA** ekle
+- Client component kullanımını minimize et (gerektiğinde kullan)
+- Interactive özellikler (onClick, useState, useEffect) için client component gerekli
+
+#### Route Yapısı
+
+```
+app/
+  ├── layout.tsx          # Root layout
+  ├── page.tsx            # Homepage
+  ├── movies/
+  │   ├── layout.tsx      # Movies section layout
+  │   ├── page.tsx        # Movies list
+  │   └── [id]/
+  │       └── page.tsx    # Movie detail (dynamic route)
+  └── ...
+```
+
+#### Data Fetching
+
+- Server component'lerde direkt `fetch` kullan (automatic caching)
+- `fetch` cache options kullan (revalidate, cache)
+- Client component'lerde `useEffect` + `fetch` veya React Query kullan
+- API route'lar `app/api/` altında
+
+#### Metadata ve SEO
+
+- Her sayfa için metadata tanımla:
+
+```typescript
+export const metadata: Metadata = {
+  title: "Film Adı",
+  description: "Film açıklaması",
+};
+```
+
+- Dynamic metadata için `generateMetadata` function kullan
+- Open Graph ve Twitter Card metadata ekle
+
+#### Styling ve UI
+
+### Tailwind CSS
+
+- Tailwind CSS kullan (inline styles **KESINLIKLE YOK**)
+- `cn()` utility fonksiyonu ile class birleştirme yap
+- CSS Variables kullan (dark mode desteği için)
+- Responsive design: mobile-first yaklaşım
+- Custom utility class'ları `@layer` ile ekle
+
+### shadcn/ui
+
+- **shadcn/ui** komponentleri kullan (Radix UI tabanlı)
+- Mevcut UI komponentlerini extend et, yeni yazma
+- Component customization için `className` prop kullan
+- **Lucide React** icon library kullan
+
+### Komponent Yapısı
+
+#### Organizasyon
+
+- **UI komponentleri:** `components/ui/` - shadcn/ui pattern'i
+- **Feature komponentleri:** `components/` - sayfa/feature spesifik
+- **Layout komponentleri:** `components/layout/` - layout component'ler
+- Tüm komponentler TypeScript ile yazılmalı
+
+#### Komponent Standartları
+
+- Named export kullan (default export tercih etme)
+- Props için TypeScript interface/type tanımla
+- Client component'ler için `"use client"` **MUTLAKA** ekle
+- Server component'ler için directive ekleme
+
+### State Management
+
+- **Local state:** `useState` hook'u kullan
+- **Global state:** Context API kullan (gerekirse)
+- **Server state:** Server component'lerde direkt data fetch
+- **Form state:** React Hook Form + Zod validation kullan
+- State management library'ye gerek yok (Context yeterli olabilir)
+
+### API Integration
+
+- Backend API ile entegrasyon (`server/` projesi)
+- API endpoint'leri environment variable'lardan al (`.env.local`)
+- Server component'lerde direkt `fetch` kullan
+- Client component'lerde API route'ları veya direkt backend'e istek at
+- Error handling ve retry logic ekle
+- Request/Response type'larını tanımla
+
+### Environment Variables
+
+- `.env.local` dosyası kullan (development)
+- `.env.example` dosyası oluştur (template için)
+- Next.js environment variable prefix'lerini kullan:
+  - `NEXT_PUBLIC_` - Client-side'da kullanılacak değişkenler
+  - Diğerleri - Server-side only
+- **ASLA** `.env.local` dosyasını commit etme
+
+### Performance Optimizasyonları
+
+#### Next.js Özellikleri
+
+- `next/image` kullan (Image optimization)
+- `next/link` kullan (Client-side navigation)
+- Dynamic import kullan (code splitting için)
+- `loading.tsx` ile loading state'leri göster
+- Streaming SSR kullan
+
+#### Code Splitting
+
+- Route-based code splitting (otomatik)
+- Component-based code splitting (dynamic import)
+- Lazy loading implement et (büyük component'ler için)
+
+#### Bundle Size
+
+- Bundle analyzer kullan
+- Unused import'ları temizle
+- Tree-shaking'e dikkat et
+
+### UI/UX Prensipleri
+
+- Kullanıcı dostu arayüz tasarla
+- Mobile-first yaklaşım
+- Accessibility (a11y) standartlarına uy
+- Loading ve error state'leri göster
+- Form validation ve error mesajları göster
+- Toast/notification sistemi kullan (başarı/hata mesajları için)
+
+### Internationalization (i18n)
+
+- next-intl veya next-i18next kullan (gerekiyorsa)
+- Hard-coded string'ler **KESINLIKLE YOK** - i18n kullan
+- Dil değiştirme UI'ı ekle (gerekiyorsa)
+
+### Code Organization
+
+```
+client/
+  ├── app/                 # Next.js App Router
+  │   ├── layout.tsx
+  │   ├── page.tsx
+  │   ├── (routes)/        # Route groups
+  │   └── api/             # API routes (gerekiyorsa)
+  ├── components/
+  │   ├── ui/              # shadcn/ui components
+  │   ├── layout/          # Layout components
+  │   └── features/        # Feature-specific components
+  ├── lib/                 # Utility functions
+  ├── hooks/               # Custom React hooks
+  ├── types/               # TypeScript types/interfaces
+  ├── styles/              # Global styles (gerekiyorsa)
+  └── public/              # Static files
+```
+
+## YAPILMAYACAKLAR ❌
+
+- ❌ Hard-coded API URL'leri (environment variable kullan)
+- ❌ Console.log production'da bırakma
+- ❌ Büyük bundle'lar oluşturma
+- ❌ Inline style'lar (Tailwind kullan)
+- ❌ `any` type kullanma (TypeScript strict mode)
+- ❌ Server component'lerde `"use client"` kullanma
+- ❌ Client component'lerde `"use client"` unutma
+- ❌ Hard-coded string'ler (i18n kullan)
+- ❌ `next/image` yerine normal `<img>` kullanma
+- ❌ `next/link` yerine normal `<a>` kullanma (internal links için)
+- ❌ Metadata tanımlamadan sayfa oluşturma
+
+## YAPILACAKLAR ✅
+
+- ✅ Her sayfa için metadata tanımla
+- ✅ Server component'leri default olarak kullan
+- ✅ Client component'leri sadece gerektiğinde kullan
+- ✅ `"use client"` directive'i doğru kullan
+- ✅ Environment variable'ları kullan
+- ✅ Type-safe API calls
+- ✅ Error boundaries ekle (`error.tsx`)
+- ✅ Loading states göster (`loading.tsx`)
+- ✅ Responsive design (mobile-first)
+- ✅ Accessibility standartlarına uy
+- ✅ Image optimization (`next/image`)
+- ✅ Code splitting (dynamic import)
+- ✅ Tailwind CSS kullan
+- ✅ shadcn/ui komponentleri kullan
+- ✅ Form validation (React Hook Form + Zod)
+
+### Next.js Best Practices
+
+- ✅ Metadata her sayfada tanımla
+- ✅ Loading ve error state'leri ekle
+- ✅ Image optimization yap
+- ✅ Link prefetching kullan
+- ✅ Static generation tercih et (SSG)
+- ✅ Server component'leri optimize et
+- ✅ API route'ları gerektiğinde kullan
+
+## Routing Best Practices
+
+- Statik route'lar için SSG kullan
+- Dynamic route'lar için ISR (Incremental Static Regeneration) kullan
+- Route groups kullan (`(auth)`, `(marketing)` gibi)
+- Middleware kullan (auth check, redirect vb.)
+
+## Testing (Opsiyonel)
+
+- Unit test'ler için **Jest** + **React Testing Library**
+- E2E test'ler için **Playwright** veya **Cypress**
+- Component test'leri yaz
+
+## Performance Monitoring
+
+- Web Vitals metriklerini takip et
+- Lighthouse score'unu optimize et
+- Bundle size'ı kontrol et

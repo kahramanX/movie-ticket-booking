@@ -137,7 +137,9 @@ export const TabProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const removeTab = (tabId: string) => {
+    // Tab'ı state'den kaldır - reducer yeni aktif tab'ı belirleyecek
     dispatch({ type: "REMOVE_TAB", payload: tabId });
+    // URL güncellemesi useEffect tarafından yapılacak
   };
 
   const setActiveTab = (tabId: string) => {
@@ -150,7 +152,13 @@ export const TabProvider: React.FC<{ children: ReactNode }> = ({
 
   // URL senkronizasyonu - aktif tab değiştiğinde URL'i güncelle
   useEffect(() => {
-    if (!state.activeTabId) return;
+    if (!state.activeTabId) {
+      // Hiç aktif tab yoksa ve /panel'de değilsek, /panel'e git
+      if (pathname !== "/panel") {
+        router.replace("/panel");
+      }
+      return;
+    }
 
     const activeTab = state.tabs.find((tab) => tab.id === state.activeTabId);
 
@@ -160,14 +168,14 @@ export const TabProvider: React.FC<{ children: ReactNode }> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.activeTabId, state.tabs]); // Sadece activeTabId veya tabs değiştiğinde çalış
 
-  // Pathname değiştiğinde aktif tab'ı güncelle - sadece manuel URL değişikliklerinde
+  // Pathname değiştiğinde aktif tab'ı güncelle
   useEffect(() => {
     // Eğer pathname panel ile başlamıyorsa işlem yapma
-    if (!pathname.startsWith("/panel/")) return;
+    if (!pathname.startsWith("/panel")) return;
 
     const matchingTab = state.tabs.find((tab) => tab.path === pathname);
 
-    // Sadece farklı bir tab varsa ve şu anki aktif tab farklıysa değiştir
+    // Pathname'e eşleşen tab varsa ve aktif tab farklıysa, onu aktif yap
     if (matchingTab && state.activeTabId !== matchingTab.id) {
       dispatch({ type: "SET_ACTIVE_TAB", payload: matchingTab.id });
     }

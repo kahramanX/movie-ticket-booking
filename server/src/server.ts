@@ -1,13 +1,24 @@
+// Register tsconfig-paths FIRST for path alias resolution
+import "tsconfig-paths/register";
+
+// Load .env file FIRST, before any imports that need environment variables
 import dotenv from "dotenv";
 import path from "path";
 
-// Load .env file from root directory (CommonJS has __dirname available)
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
-import app from "./app";
-import sequelize from "./config/database";
+// Now import modules that depend on environment variables
+import app from "@/app";
+import { sequelize } from "@/database/db";
+import {
+  logServerStartup,
+  logDatabaseConnection,
+  logDatabaseSync,
+  logDatabaseError,
+  logServerError,
+} from "@/utils/initialLogger";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Database connection
 async function startServer() {
@@ -15,27 +26,22 @@ async function startServer() {
     // Try to connect to database
     try {
       await sequelize.authenticate();
-      console.log("✅ Database connection established successfully.");
+      logDatabaseConnection();
 
       // Sync database (only in development)
       if (process.env.NODE_ENV === "development") {
         await sequelize.sync({ alter: false });
-        console.log("✅ Database synced.");
+        logDatabaseSync();
       }
     } catch (dbError: any) {
-      console.warn("⚠️  Database connection failed:", dbError.message);
-      console.warn("⚠️  Server will start without database connection.");
-      console.warn(
-        "⚠️  Make sure PostgreSQL is running and .env file is configured correctly.",
-      );
+      logDatabaseError(dbError.message);
     }
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server is running on port ${PORT}`);
-      console.log(`📍 Environment: ${process.env.NODE_ENV || "development"}`);
+      logServerStartup(app, PORT);
     });
   } catch (error) {
-    console.error("❌ Unable to start server:", error);
+    logServerError(error);
     process.exit(1);
   }
 }

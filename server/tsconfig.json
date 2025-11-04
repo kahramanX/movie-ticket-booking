@@ -24,7 +24,7 @@
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"],
   "ts-node": {
-    "esm": false
+    "esm": false,
+    "require": ["tsconfig-paths/register"]
   }
 }
-

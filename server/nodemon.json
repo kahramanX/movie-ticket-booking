@@ -1,7 +1,7 @@
 {
   "watch": ["src"],
   "ext": "ts",
-  "exec": "ts-node --transpile-only src/server.ts",
+  "exec": "ts-node -r tsconfig-paths/register --transpile-only src/server.ts",
   "ignore": ["src/**/*.spec.ts", "node_modules"],
   "env": {
     "NODE_ENV": "development"

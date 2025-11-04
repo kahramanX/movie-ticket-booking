@@ -1,5 +1,5 @@
-import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/database';
+import { DataTypes, Model } from "sequelize";
+import { sequelize } from "@/database/db";
 
 type ExampleAttributes = {
   id: number;
@@ -39,10 +39,9 @@ Example.init(
   },
   {
     sequelize,
-    tableName: 'examples',
+    tableName: "examples",
     timestamps: true,
-  }
+  },
 );
 
 export default Example;
-

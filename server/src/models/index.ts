@@ -1,4 +1,4 @@
-import sequelize from '../config/database';
+import { sequelize } from "@/database/db";
 
 // Import models
 // import User from './user';
@@ -11,4 +11,3 @@ const db = {
 };
 
 export default db;
-

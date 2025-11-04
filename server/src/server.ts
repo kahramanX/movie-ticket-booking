@@ -1,3 +1,6 @@
+// Register tsconfig-paths FIRST for path alias resolution
+import "tsconfig-paths/register";
+
 // Load .env file FIRST, before any imports that need environment variables
 import dotenv from "dotenv";
 import path from "path";

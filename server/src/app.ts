@@ -55,6 +55,11 @@ try {
 
   // Routes
   app.use("/api/v1/customer", cors(corsOptions), routes.customer);
+  app.use(
+    "/api/v1/admin/system-status",
+    cors(corsOptions),
+    routes.systemStatus,
+  );
 
   // 404 handler - must be after all routes
   app.get("*", (req: Request, res: Response) => {

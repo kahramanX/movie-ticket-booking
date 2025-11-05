@@ -2,8 +2,12 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express";
+import { swaggerAdminSpec } from "@/config/swaggerAdmin";
+import { swaggerClientSpec } from "@/config/swaggerClient";
 import { requestDurationMiddleware } from "@/utils/initialLogger";
-import routes from "@/routes/index";
+import adminRoutes from "@/routes/admin/index";
+import clientRoutes from "@/routes/client/index";
 import { sequelize } from "@/database/db";
 import { Customer } from "@/models/Customer";
 
@@ -31,6 +35,41 @@ if (process.env.NODE_ENV === "development") {
   app.use(requestDurationMiddleware);
 }
 
+// Swagger API Documentation - Admin
+app.use(
+  "/api-docs/admin",
+  swaggerUi.serveFiles(swaggerAdminSpec, {}),
+  swaggerUi.setup(swaggerAdminSpec, {
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "Admin API Documentation",
+  }),
+);
+
+// Swagger API Documentation - Client
+app.use(
+  "/api-docs/client",
+  swaggerUi.serveFiles(swaggerClientSpec, {}),
+  swaggerUi.setup(swaggerClientSpec, {
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "Client API Documentation",
+  }),
+);
+
+/**
+ * @swagger
+ * /health:
+ *   get:
+ *     summary: Health check endpoint
+ *     tags: [Health]
+ *     description: Returns server health status. Available for admin monitoring.
+ *     responses:
+ *       200:
+ *         description: Server is running
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/HealthResponse'
+ */
 // Health check
 app.get("/health", (req: Request, res: Response) => {
   res.json({ success: true, message: "Server is running" });
@@ -53,13 +92,16 @@ try {
     }
   })();
 
-  // Routes
-  app.use("/api/v1/customer", cors(corsOptions), routes.customer);
+  // Admin Routes
+  app.use("/api/v1/admin/members", cors(corsOptions), adminRoutes.members);
   app.use(
     "/api/v1/admin/system-status",
     cors(corsOptions),
-    routes.systemStatus,
+    adminRoutes.systemStatus,
   );
+
+  // Client Routes
+  app.use("/api/v1/client/user", cors(corsOptions), clientRoutes.user);
 
   // 404 handler - must be after all routes
   app.get("*", (req: Request, res: Response) => {

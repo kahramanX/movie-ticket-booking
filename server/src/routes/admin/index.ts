@@ -1,7 +1,7 @@
-import customer from "./customer";
+import members from "./members";
 import systemStatus from "./systemStatus";
 
 export default {
-  customer,
+  members,
   systemStatus,
 };

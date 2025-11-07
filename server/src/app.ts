@@ -55,26 +55,6 @@ app.use(
   }),
 );
 
-/**
- * @swagger
- * /health:
- *   get:
- *     summary: Health check endpoint
- *     tags: [Health]
- *     description: Returns server health status. Available for admin monitoring.
- *     responses:
- *       200:
- *         description: Server is running
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/HealthResponse'
- */
-// Health check
-app.get("/health", (req: Request, res: Response) => {
-  res.json({ success: true, message: "Server is running" });
-});
-
 // Database models and sync
 try {
   // Sequelize v6 doesn't have addModels, models are registered when imported

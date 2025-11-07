@@ -141,19 +141,6 @@ const options: swaggerJsdoc.Options = {
             },
           },
         },
-        HealthResponse: {
-          type: "object",
-          properties: {
-            success: {
-              type: "boolean",
-              example: true,
-            },
-            message: {
-              type: "string",
-              example: "Server is running",
-            },
-          },
-        },
         ErrorResponse: {
           type: "object",
           properties: {
@@ -178,16 +165,11 @@ const options: swaggerJsdoc.Options = {
         name: "System Status",
         description: "System status and health monitoring endpoints",
       },
-      {
-        name: "Health",
-        description: "Health check endpoints",
-      },
     ],
   },
   apis: [
     "./src/routes/admin/*.ts",
     "./src/controllers/admin/*.ts",
-    "./src/app.ts",
   ],
 };
 

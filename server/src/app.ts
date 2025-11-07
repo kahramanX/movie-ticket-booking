@@ -42,6 +42,14 @@ app.use(
   swaggerUi.setup(swaggerAdminSpec, {
     customCss: ".swagger-ui .topbar { display: none }",
     customSiteTitle: "Admin API Documentation",
+    explorer: true,
+    swaggerOptions: {
+      docExpansion: "none",
+      filter: true,
+      showRequestDuration: true,
+      defaultModelsExpandDepth: 1,
+      defaultModelExpandDepth: 1,
+    },
   }),
 );
 
@@ -52,6 +60,14 @@ app.use(
   swaggerUi.setup(swaggerClientSpec, {
     customCss: ".swagger-ui .topbar { display: none }",
     customSiteTitle: "Client API Documentation",
+    explorer: true,
+    swaggerOptions: {
+      docExpansion: "none",
+      filter: true,
+      showRequestDuration: true,
+      defaultModelsExpandDepth: 1,
+      defaultModelExpandDepth: 1,
+    },
   }),
 );
 
@@ -84,7 +100,7 @@ try {
       .status(404)
       .json({
         message: "This route is unavailable",
-        path: "Visit project's repo for more details",
+        path: "Visit project's repo for more details https://github.com/kahramanX",
       })
       .end();
   });

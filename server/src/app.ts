@@ -2,8 +2,12 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express";
+import { swaggerAdminSpec } from "@/config/swaggerAdmin";
+import { swaggerClientSpec } from "@/config/swaggerClient";
 import { requestDurationMiddleware } from "@/utils/initialLogger";
-import routes from "@/routes/index";
+import adminRoutes from "@/routes/admin/index";
+import clientRoutes from "@/routes/client/index";
 import { sequelize } from "@/database/db";
 import { Customer } from "@/models/Customer";
 
@@ -31,10 +35,41 @@ if (process.env.NODE_ENV === "development") {
   app.use(requestDurationMiddleware);
 }
 
-// Health check
-app.get("/health", (req: Request, res: Response) => {
-  res.json({ success: true, message: "Server is running" });
-});
+// Swagger API Documentation - Admin
+app.use(
+  "/api-docs/admin",
+  swaggerUi.serveFiles(swaggerAdminSpec, {}),
+  swaggerUi.setup(swaggerAdminSpec, {
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "Admin API Documentation",
+    explorer: true,
+    swaggerOptions: {
+      docExpansion: "none",
+      filter: true,
+      showRequestDuration: true,
+      defaultModelsExpandDepth: 1,
+      defaultModelExpandDepth: 1,
+    },
+  }),
+);
+
+// Swagger API Documentation - Client
+app.use(
+  "/api-docs/client",
+  swaggerUi.serveFiles(swaggerClientSpec, {}),
+  swaggerUi.setup(swaggerClientSpec, {
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "Client API Documentation",
+    explorer: true,
+    swaggerOptions: {
+      docExpansion: "none",
+      filter: true,
+      showRequestDuration: true,
+      defaultModelsExpandDepth: 1,
+      defaultModelExpandDepth: 1,
+    },
+  }),
+);
 
 // Database models and sync
 try {
@@ -53,13 +88,11 @@ try {
     }
   })();
 
-  // Routes
-  app.use("/api/v1/customer", cors(corsOptions), routes.customer);
-  app.use(
-    "/api/v1/admin/system-status",
-    cors(corsOptions),
-    routes.systemStatus,
-  );
+  // Admin Routes
+  app.use("/api/v1/admin", cors(corsOptions), adminRoutes);
+
+  // Client Routes
+  app.use("/api/v1/client", cors(corsOptions), clientRoutes);
 
   // 404 handler - must be after all routes
   app.get("*", (req: Request, res: Response) => {
@@ -67,7 +100,7 @@ try {
       .status(404)
       .json({
         message: "This route is unavailable",
-        path: "Visit project's repo for more details",
+        path: "Visit project's repo for more details https://github.com/kahramanX",
       })
       .end();
   });

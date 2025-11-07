@@ -79,6 +79,20 @@ export const logServerStartup = (app: Express, port: string | undefined) => {
     "\x1b[0m",
   );
   console.log(
+    "\x1b[34m%s",
+    "Admin API Docs : ",
+    "\x1b[36m",
+    `http://localhost:${port}/api-docs/admin`,
+    "\x1b[0m",
+  );
+  console.log(
+    "\x1b[34m%s",
+    "Client API Docs : ",
+    "\x1b[36m",
+    `http://localhost:${port}/api-docs/client`,
+    "\x1b[0m",
+  );
+  console.log(
     "\x1b[31m%s",
     "-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|",
     "\x1b[0m",

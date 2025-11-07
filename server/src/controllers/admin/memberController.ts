@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import { Customer } from "@/models/Customer";
 
-/**
- * Get all members (admin only)
- */
 export const getAllMembers = async (req: Request, res: Response) => {
   try {
     const members = await Customer.findAll({
@@ -23,9 +20,6 @@ export const getAllMembers = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Get member by ID (admin only)
- */
 export const getMemberById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -49,4 +43,3 @@ export const getMemberById = async (req: Request, res: Response) => {
     });
   }
 };
-

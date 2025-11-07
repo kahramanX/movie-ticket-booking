@@ -73,15 +73,10 @@ try {
   })();
 
   // Admin Routes
-  app.use("/api/v1/admin/members", cors(corsOptions), adminRoutes.members);
-  app.use(
-    "/api/v1/admin/system-status",
-    cors(corsOptions),
-    adminRoutes.systemStatus,
-  );
+  app.use("/api/v1/admin", cors(corsOptions), adminRoutes);
 
   // Client Routes
-  app.use("/api/v1/client/user", cors(corsOptions), clientRoutes.user);
+  app.use("/api/v1/client", cors(corsOptions), clientRoutes);
 
   // 404 handler - must be after all routes
   app.get("*", (req: Request, res: Response) => {

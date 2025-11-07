@@ -3,8 +3,8 @@ import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
-import { swaggerAdminSpec } from "@/config/swaggerAdmin";
-import { swaggerClientSpec } from "@/config/swaggerClient";
+import swaggerAdminSpec from "@/config/swagger/swagger-output-admin.json";
+import swaggerClientSpec from "@/config/swagger/swagger-output-client.json";
 import { requestDurationMiddleware } from "@/utils/initialLogger";
 import adminRoutes from "@/routes/admin/index";
 import clientRoutes from "@/routes/client/index";
@@ -36,10 +36,21 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Swagger API Documentation - Admin
+const adminSwaggerSpec = {
+  ...swaggerAdminSpec,
+  servers: [
+    {
+      url:
+        process.env.API_URL || `http://localhost:${process.env.PORT || 3000}`,
+      description: "Development server",
+    },
+  ],
+};
+
 app.use(
   "/api-docs/admin",
-  swaggerUi.serveFiles(swaggerAdminSpec, {}),
-  swaggerUi.setup(swaggerAdminSpec, {
+  swaggerUi.serveFiles(adminSwaggerSpec, {}),
+  swaggerUi.setup(adminSwaggerSpec, {
     customCss: ".swagger-ui .topbar { display: none }",
     customSiteTitle: "Admin API Documentation",
     explorer: true,
@@ -49,15 +60,27 @@ app.use(
       showRequestDuration: true,
       defaultModelsExpandDepth: 1,
       defaultModelExpandDepth: 1,
+      persistAuthorization: true,
     },
   }),
 );
 
 // Swagger API Documentation - Client
+const clientSwaggerSpec = {
+  ...swaggerClientSpec,
+  servers: [
+    {
+      url:
+        process.env.API_URL || `http://localhost:${process.env.PORT || 3000}`,
+      description: "Development server",
+    },
+  ],
+};
+
 app.use(
   "/api-docs/client",
-  swaggerUi.serveFiles(swaggerClientSpec, {}),
-  swaggerUi.setup(swaggerClientSpec, {
+  swaggerUi.serveFiles(clientSwaggerSpec, {}),
+  swaggerUi.setup(clientSwaggerSpec, {
     customCss: ".swagger-ui .topbar { display: none }",
     customSiteTitle: "Client API Documentation",
     explorer: true,
@@ -67,6 +90,7 @@ app.use(
       showRequestDuration: true,
       defaultModelsExpandDepth: 1,
       defaultModelExpandDepth: 1,
+      persistAuthorization: true,
     },
   }),
 );
